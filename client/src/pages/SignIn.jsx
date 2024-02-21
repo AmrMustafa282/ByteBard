@@ -9,24 +9,28 @@ import {
  ToastToggle,
 } from "flowbite-react";
 import { HiCheck, HiExclamation } from "react-icons/hi";
+import {useDispatch ,useSelector} from 'react-redux'
+
+import { signInStart , signInSuccess , signInFailure } from "../redux/user/userSlice";
+ 
 
 const SignIn = () => {
  const [formData, setFormData] = useState({});
- const [error, setError] = useState(null);
- const [loading, setLoading] = useState(false);
- const [done, setDone] = useState(false);
- const navigate = useNavigate();
+//  const [error, setError] = useState(null);
+  //  const [loading, setLoading] = useState(false);
+  const { loading, error, done } = useSelector(state => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
  const handelChange = (e) => {
   setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
   if ( !formData.email || !formData.password) {
-   return setError("Please fill out all fields!");
+   return dispatch(signInFailure('Please fill out all fields!'))
   }
   try {
-   setLoading(true);
-   setError(null);
+    dispatch(signInStart())
    const res = await fetch("/api/auth/signin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -34,19 +38,19 @@ const SignIn = () => {
    });
    const data = await res.json();
    if (data.status === "failed") {
-    setLoading(false);
-    return setError(data.message);
+    // setLoading(false);
+    dispatch(signInFailure(data.message))
    }
-   setLoading(false);
-   if (res.ok) {
-    setDone(true);
+  //  setLoading(false);
+    if (res.ok) {
+     dispatch(signInSuccess(data))
+    // setDone(true);
     setTimeout(() => {
      navigate("/");
     }, 500);
    }
   } catch (error) {
-   setError(error.message);
-   setLoading(false);
+   dispatch(signInFailure(error.message))
   }
  };
  console.log(formData);
