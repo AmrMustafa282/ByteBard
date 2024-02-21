@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
- Alert,
  Button,
  Label,
  Spinner,
@@ -9,7 +8,7 @@ import {
  Toast,
  ToastToggle,
 } from "flowbite-react";
-import { HiCheck, HiExclamation, HiX } from "react-icons/hi";
+import { HiCheck, HiExclamation } from "react-icons/hi";
 
 const SignUp = () => {
  const [formData, setFormData] = useState({});
@@ -92,7 +91,7 @@ const SignUp = () => {
        <Label value="Your password" />
        <TextInput
         type="password"
-        placeholder="Password"
+        placeholder="********"
         id="password"
         onChange={handelChange}
        />
