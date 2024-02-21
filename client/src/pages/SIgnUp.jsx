@@ -52,7 +52,7 @@ const SignUp = () => {
  };
  console.log(formData);
  return (
-  <div className="min-h-screen mt-20 relative">
+  <div className="min-h-[55vh] mt-20 relative">
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">
@@ -117,7 +117,7 @@ const SignUp = () => {
     </div>
     
      </div>
-     <div className="flex absolute bottom-44 right-5">
+     <div className="flex absolute bottom-5 right-5">
      {error && (
       <Toast className="ml-auto mt-auto ">
        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">

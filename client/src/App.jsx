@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import SignUp from"./pages/SignUp"
 import SignIn from"./pages/SignIn"
 import Header from "./components/Header";
+import FooterFC from "./components/Footer";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/sign-in' element={<SignIn/>} />
         <Route path='*' element={<div>404</div>} />
       </Routes>
+      <FooterFC />
     </Router>
  );
 }
