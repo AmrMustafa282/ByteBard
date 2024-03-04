@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
  Button,
@@ -9,6 +9,7 @@ import {
  ToastToggle,
 } from "flowbite-react";
 import { HiCheck, HiExclamation } from "react-icons/hi";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
  const [formData, setFormData] = useState({});
@@ -21,7 +22,7 @@ const SignUp = () => {
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-  if (!formData.username || !formData.email || !formData.password) {
+  if (!formData.name || !formData.email || !formData.password) {
    return setError("Please fill out all fields!");
   }
   try {
@@ -49,7 +50,8 @@ const SignUp = () => {
    setLoading(false);
   }
  };
- console.log(formData);
+  //  console.log(formData);
+  
  return (
   <div className="min-h-[55vh] mt-20 relative">
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -70,11 +72,11 @@ const SignUp = () => {
     <div className="flex-1">
      <form className="flex flex-col gap-4 " onSubmit={handelSubmit}>
       <div>
-       <Label value="Your username" />
+       <Label value="Your name" />
        <TextInput
         type="text"
-        placeholder="Username"
-        id="username"
+        placeholder="name"
+        id="name"
         onChange={handelChange}
        />
       </div>
@@ -106,6 +108,7 @@ const SignUp = () => {
         "Sign Up"
        )}
       </Button>
+      <OAuth />
      </form>
      <div className="flex gap-2 text-sm mt-5">
       <span>Have an account?</span>
@@ -114,30 +117,29 @@ const SignUp = () => {
       </Link>
      </div>
     </div>
-    
-     </div>
-     <div className="flex absolute bottom-5 right-5">
-     {error && (
-      <Toast className="ml-auto mt-auto ">
-       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-        <HiExclamation className="h-5 w-5" />
-       </div>
-       <div className="ml-3 text-sm font-normal">{error}.</div>
-       <ToastToggle />
-      </Toast>
-     )}
-     {done && (
-      <Toast>
-       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-        <HiCheck className="h-5 w-5" />
-       </div>
-       <div className="ml-3 text-sm font-normal">
-        Account created successfully.
-       </div>
-       <ToastToggle />
-      </Toast>
-     )}
-    </div>
+   </div>
+   <div className="flex absolute bottom-5 right-5">
+    {error && (
+     <Toast className="ml-auto mt-auto ">
+      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
+       <HiExclamation className="h-5 w-5" />
+      </div>
+      <div className="ml-3 text-sm font-normal">{error}.</div>
+      <ToastToggle />
+     </Toast>
+    )}
+    {done && (
+     <Toast>
+      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+       <HiCheck className="h-5 w-5" />
+      </div>
+      <div className="ml-3 text-sm font-normal">
+       Account created successfully.
+      </div>
+      <ToastToggle />
+     </Toast>
+    )}
+   </div>
   </div>
  );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
  Button,
@@ -9,28 +9,32 @@ import {
  ToastToggle,
 } from "flowbite-react";
 import { HiCheck, HiExclamation } from "react-icons/hi";
-import {useDispatch ,useSelector} from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
-import { signInStart , signInSuccess , signInFailure } from "../redux/user/userSlice";
- 
+import {
+ signInStart,
+ signInSuccess,
+ signInFailure,
+} from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
- const [formData, setFormData] = useState({});
-//  const [error, setError] = useState(null);
-  //  const [loading, setLoading] = useState(false);
-  const { loading, error, done } = useSelector(state => state.user);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({});
+  const [done, setDone] = useState(false);
+  const { loading,error } = useSelector((state) => state.user);
+  
+ const navigate = useNavigate();
+ const dispatch = useDispatch();
  const handelChange = (e) => {
   setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-  if ( !formData.email || !formData.password) {
-   return dispatch(signInFailure('Please fill out all fields!'))
+  if (!formData.email || !formData.password) {
+   return dispatch(signInFailure("Please fill out all fields!"));
   }
   try {
-    dispatch(signInStart())
+   dispatch(signInStart());
    const res = await fetch("/api/auth/signin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -39,21 +43,21 @@ const SignIn = () => {
    const data = await res.json();
    if (data.status === "failed") {
     // setLoading(false);
-    dispatch(signInFailure(data.message))
+    dispatch(signInFailure(data.message));
    }
-  //  setLoading(false);
-    if (res.ok) {
-     dispatch(signInSuccess(data))
-    // setDone(true);
+   //  setLoading(false);
+   if (res.ok) {
+    dispatch(signInSuccess(data));
+    setDone(true);
     setTimeout(() => {
      navigate("/");
     }, 500);
    }
   } catch (error) {
-   dispatch(signInFailure(error.message))
+   dispatch(signInFailure(error.message));
   }
  };
- console.log(formData);
+
  return (
   <div className="min-h-[55vh] mt-20 relative">
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -101,6 +105,7 @@ const SignIn = () => {
         "Sign In"
        )}
       </Button>
+      <OAuth /> 
      </form>
      <div className="flex gap-2 text-sm mt-5">
       <span>Create new account?</span>
@@ -112,7 +117,7 @@ const SignIn = () => {
    </div>
    <div className="flex absolute bottom-5 right-5">
     {error && (
-     <Toast className="ml-auto mt-auto ">
+     <Toast className="ml-auto mt-auto " >
       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
        <HiExclamation className="h-5 w-5" />
       </div>
@@ -125,9 +130,7 @@ const SignIn = () => {
       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
        <HiCheck className="h-5 w-5" />
       </div>
-      <div className="ml-3 text-sm font-normal">
-       Loggedin successfully.
-      </div>
+      <div className="ml-3 text-sm font-normal">Loggedin successfully.</div>
       <ToastToggle />
      </Toast>
     )}
