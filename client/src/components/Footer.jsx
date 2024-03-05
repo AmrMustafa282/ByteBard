@@ -5,7 +5,10 @@ import {BsFacebook, BsGithub, BsLinkedin, BsTwitch, BsTwitterX} from 'react-icon
 
 const FooterFC = () => {
   return (
-   <Footer container className="rounded-none mt-auto border-[2px] dark:border-none">
+   <Footer
+    container
+    className="rounded-none mt-auto border-t-2 dark:border-t-1 dark:border-t-gray-700 "
+   >
     <div className="w-full max-w-7xl mx-auto ">
      <div className="grid w-full justify-between sm:flex md:grid-cols-1">
       <div className="mt-5 ">
@@ -63,14 +66,14 @@ const FooterFC = () => {
       </div>
      </div>
      <Footer.Divider />
-     <div className='flex justify-between'>
+     <div className="flex justify-between">
       <Footer.Copyright
        href="#"
        by="Amr's Blog"
        year={new Date().getFullYear()}
       />
-          <div className='flex gap-6 sm:mt-0 mt-4 sm:justify-center'>
-            <Footer.Icon
+      <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
+       <Footer.Icon
         href="https://www.linkedin.com/in/amr-mustafa-6534a5242/"
         icon={BsLinkedin}
        />
@@ -78,7 +81,7 @@ const FooterFC = () => {
         href="https://www.facebook.com/profile.php?id=100012933486127"
         icon={BsFacebook}
        />
-       
+
        <Footer.Icon href="https://github.com/AmrMustafa282" icon={BsGithub} />
        <Footer.Icon
         href="https://twitter.com/AmrMustafa115"
