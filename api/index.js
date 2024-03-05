@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.listen(port, () => {
   console.log(`server started on port ${port}`);

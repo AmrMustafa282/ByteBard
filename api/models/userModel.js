@@ -13,8 +13,14 @@ const userSchema = new mongoose.Schema(
    unique: true,
   },
   password: {
-   type: String,
-   required: true,
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        return v && v.length >= 6;
+      },
+      message: props => `${props.value} is shorter than the minimum allowed length (6) for the password field`
+    }
   },
   profilePicture: {
    type: String,
