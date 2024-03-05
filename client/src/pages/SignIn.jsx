@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
  Button,
@@ -19,10 +19,10 @@ import {
 import OAuth from "../components/OAuth";
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({});
-  const [done, setDone] = useState(false);
-  const { loading,error } = useSelector((state) => state.user);
-  
+ const [formData, setFormData] = useState({});
+ const [done, setDone] = useState(false);
+ const { loading, error } = useSelector((state) => state.user);
+
  const navigate = useNavigate();
  const dispatch = useDispatch();
  const handelChange = (e) => {
@@ -105,7 +105,7 @@ const SignIn = () => {
         "Sign In"
        )}
       </Button>
-      <OAuth /> 
+      <OAuth />
      </form>
      <div className="flex gap-2 text-sm mt-5">
       <span>Create new account?</span>
@@ -117,7 +117,7 @@ const SignIn = () => {
    </div>
    <div className="flex absolute bottom-5 right-5">
     {error && (
-     <Toast className="ml-auto mt-auto " >
+     <Toast className="ml-auto mt-auto ">
       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
        <HiExclamation className="h-5 w-5" />
       </div>
