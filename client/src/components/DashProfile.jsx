@@ -198,8 +198,8 @@ const DashProfile = () => {
     </Button>
    </form>
    <div className="text-red-500 flex justify-between mt-5 ">
-    <span>Delete Account</span>
-    <span>Sign Out</span>
+    <Button color="red" className="cursor-pointer">Delete Account</Button>
+    <Button color="red" className="cursor-pointer">Sign Out</Button>
    </div>
    <div className="flex absolute bottom-5 right-5"></div>
   </div>

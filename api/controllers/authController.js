@@ -36,7 +36,7 @@ export const login = async (req, res, next) => {
    return next(errorHandler(400, "Invalid email or password"));
   }
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-   expiresIn: "1h",
+   expiresIn: "90d",
   });
   const { password: pass, ...rest } = user._doc;
   res
