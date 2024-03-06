@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
- Button,
- Label,
- Spinner,
- TextInput,
- Toast,
- ToastToggle,
-} from "flowbite-react";
-import { HiCheck, HiExclamation } from "react-icons/hi";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -18,9 +12,10 @@ import {
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 
+
 const SignIn = () => {
  const [formData, setFormData] = useState({});
- const [done, setDone] = useState(false);
+
  const { loading, error } = useSelector((state) => state.user);
 
  const navigate = useNavigate();
@@ -30,7 +25,8 @@ const SignIn = () => {
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-  if (!formData.email || !formData.password) {
+   if (!formData.email || !formData.password) {
+    toast.error("Please fill out all fields!");
    return dispatch(signInFailure("Please fill out all fields!"));
   }
   try {
@@ -42,16 +38,16 @@ const SignIn = () => {
    });
    const data = await res.json();
    if (data.status === "failed") {
-    // setLoading(false);
+    toast.error(data.message);
     dispatch(signInFailure(data.message));
    }
    //  setLoading(false);
    if (res.ok) {
     dispatch(signInSuccess(data));
-    setDone(true);
+    toast.success('Logged in successfully!');
     setTimeout(() => {
      navigate("/");
-    }, 500);
+    }, 2000);
    }
   } catch (error) {
    dispatch(signInFailure(error.message));
@@ -60,6 +56,7 @@ const SignIn = () => {
 
  return (
   <div className="min-h-[55vh] mt-20 relative">
+   <ToastContainer theme={useSelector((state) => state.theme).theme} />
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">
@@ -116,24 +113,6 @@ const SignIn = () => {
     </div>
    </div>
    <div className="flex absolute bottom-5 right-5">
-    {error && (
-     <Toast className="ml-auto mt-auto ">
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-       <HiExclamation className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">{error}.</div>
-      <ToastToggle />
-     </Toast>
-    )}
-    {done && (
-     <Toast>
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-       <HiCheck className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">Loggedin successfully.</div>
-      <ToastToggle />
-     </Toast>
-    )}
    </div>
   </div>
  );

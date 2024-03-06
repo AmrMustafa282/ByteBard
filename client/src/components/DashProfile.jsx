@@ -1,27 +1,37 @@
-import { Button, TextInput ,Toast, ToastToggle} from "flowbite-react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { Button, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import  {
+import { useSelector, useDispatch } from "react-redux";
+import {
  getDownloadURL,
-  ref,
-  getStorage,
+ ref,
+ getStorage,
  uploadBytesResumable,
 } from "firebase/storage";
-import {app} from './../firebase'
-import { HiCheck, HiExclamation } from "react-icons/hi";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+
+import { app } from "./../firebase";
+import {
+ updateStart,
+ updateSuccess,
+ updateFailure,
+} from "./../redux/user/userSlice.js";
+
 
 const DashProfile = () => {
  const { currentUser } = useSelector((state) => state.user);
  const [imgFile, setImgFile] = useState(null);
  const [imageFileUrl, setImageFileUrl] = useState(null);
  const [imgFileUploadingProgress, setImgFileUploadingProgress] = useState(null);
-  const [imgFileUploadingError, setImgFileUploadingError] = useState(null);
-  const [done, setDone]= useState(false)
-  const filePickerRef = useRef();
-  
+ const [imgFileUploadingError, setImgFileUploadingError] = useState(null);
+ const [imgFileUploading, setImgFileUploading] = useState(false);
+ const [formData, setFormData] = useState({});
+ const filePickerRef = useRef();
 
+
+ const dispatch = useDispatch();
 
  const handelImageChange = (e) => {
   const file = e.target.files[0];
@@ -42,6 +52,8 @@ const DashProfile = () => {
   //     }
   //   }
   // }
+  setImgFileUploadingError(null);
+  setImgFileUploading(true);
   const storage = getStorage(app);
   const fileName = new Date().getTime() + imgFile.name;
   const storageRef = ref(storage, fileName);
@@ -56,21 +68,58 @@ const DashProfile = () => {
     setImgFileUploadingError(
      "Could not upload image (File must be less than 5MB)"
     );
-     setImgFileUploadingProgress(null)
-     setImgFile(null);
-     setImageFileUrl(null);
+    setImgFileUploadingProgress(null);
+    setImgFile(null);
+    setImageFileUrl(null);
+    setImgFileUploading(false);
    },
    () => {
     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      setImageFileUrl(downloadURL);
-      setImgFileUploadingError(false);
-      setDone(true)
-      setTimeout(() => {
-        setDone(false)
-      },5000)
+     setImageFileUrl(downloadURL);
+     setFormData({ ...formData, profilePicture: downloadURL });
+     setImgFileUploadingError(false);
+     setImgFileUploading(false);
+     toast.success('Image uploaded successfully!')
     });
    }
   );
+ };
+ const handelChange = (e) =>
+  setFormData({ ...formData, [e.target.id]: e.target.value });
+
+ const handelSubmit = async (e) => {
+  e.preventDefault();
+  if (Object.keys(formData).length === 0) {
+    toast.error('No changes made');
+   return;
+  } 
+   if (imgFileUploading) {
+    toast.warning('Please wait for image to upload!')
+     return
+  };
+  try {
+   dispatch(updateStart());
+   const res = await fetch(`/api/user/update/${currentUser._id}`, {
+    method: "PUT",
+    headers: {
+     "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+   });
+   const data = await res.json();
+   if (!res.ok) {
+    dispatch(updateFailure(data.message));
+    toast.error(`${imgFileUploadingError}.`);
+    return;
+   } else {
+    dispatch(updateSuccess(data));
+     toast.success("Data is updated successfully!");
+     setFormData({});
+   }
+  } catch (err) {
+    dispatch(updateFailure(err.message));
+    toast.error(`${err.message}.`);
+  }
  };
 
  useEffect(() => {
@@ -79,8 +128,9 @@ const DashProfile = () => {
 
  return (
   <div className="mx-auto max-w-lg p-3 w-full">
+   <ToastContainer theme={useSelector((state) => state.theme).theme} />
    <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
-   <form className="flex flex-col gap-4">
+   <form onSubmit={handelSubmit} className="flex flex-col gap-4">
     <input
      type="file"
      accept="image/*"
@@ -113,8 +163,12 @@ const DashProfile = () => {
      <img
       src={imageFileUrl || currentUser.profilePicture}
       alt="user"
-           className={`rounded-full h-full w-full object-cover border-4 border-[lightgray]
-                     ${imgFileUploadingProgress && imgFileUploadingProgress <100 && 'filter blur-sm'} 
+      className={`rounded-full h-full w-full object-cover border-4 border-[lightgray]
+                     ${
+                      imgFileUploadingProgress &&
+                      imgFileUploadingProgress < 100 &&
+                      "filter blur-sm"
+                     } 
            `}
      />
     </div>
@@ -123,14 +177,21 @@ const DashProfile = () => {
      id="name"
      placeholder="Name"
      defaultValue={currentUser.name}
+     onChange={handelChange}
     />
     <TextInput
      type="text"
      id="email"
      placeholder="Email"
      defaultValue={currentUser.email}
+     onChange={handelChange}
     />
-    <TextInput type="password" id="password" placeholder="********" />
+    <TextInput
+     type="password"
+     id="password"
+     placeholder="********"
+     onChange={handelChange}
+    />
     <Button type="submit" gradientDuoTone="purpleToBlue" outline>
      {" "}
      Update
@@ -140,28 +201,7 @@ const DashProfile = () => {
     <span>Delete Account</span>
     <span>Sign Out</span>
    </div>
-   <div className="flex absolute bottom-5 right-5">
-    {imgFileUploadingError && (
-     <Toast animation="duration-1000" className="ml-auto mt-auto ">
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-       <HiExclamation className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">{error}.</div>
-      <ToastToggle />
-     </Toast>
-    )}
-    {done && (
-     <Toast animation="duration-1000">
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-       <HiCheck className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">
-       Image uploaded successfully.
-      </div>
-      <ToastToggle />
-     </Toast>
-    )}
-   </div>
+   <div className="flex absolute bottom-5 right-5"></div>
   </div>
  );
 };

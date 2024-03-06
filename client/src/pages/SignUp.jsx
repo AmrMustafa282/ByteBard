@@ -1,33 +1,27 @@
-import React, { useState , useEffect} from "react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
- Button,
- Label,
- Spinner,
- TextInput,
- Toast,
- ToastToggle,
-} from "flowbite-react";
-import { HiCheck, HiExclamation } from "react-icons/hi";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import OAuth from "../components/OAuth";
+import { useSelector } from "react-redux";
+
 
 const SignUp = () => {
  const [formData, setFormData] = useState({});
- const [error, setError] = useState(null);
  const [loading, setLoading] = useState(false);
- const [done, setDone] = useState(false);
  const navigate = useNavigate();
  const handelChange = (e) => {
   setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-  if (!formData.name || !formData.email || !formData.password) {
-   return setError("Please fill out all fields!");
+   if (!formData.name || !formData.email || !formData.password) {
+    toast.error("Please fill out all fields!");
+   return ;
   }
   try {
    setLoading(true);
-   setError(null);
    const res = await fetch("/api/auth/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -35,25 +29,27 @@ const SignUp = () => {
    });
    const data = await res.json();
    if (data.status === "failed") {
-    setLoading(false);
-    return setError(data.message);
+     setLoading(false);
+     toast.error(data.message);
+    return ;
    }
    setLoading(false);
    if (res.ok) {
-    setDone(true);
+    toast.success("Account created successfully!");
     setTimeout(() => {
      navigate("/sign-in");
-    }, 1500);
+    }, 2000);
    }
   } catch (error) {
-   setError(error.message);
+    toast.error(error.message);
    setLoading(false);
   }
  };
-  //  console.log(formData);
-  
+ //  console.log(formData);
+
  return (
   <div className="min-h-[55vh] mt-20 relative">
+   <ToastContainer theme={useSelector((state) => state.theme).theme} />
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">
@@ -119,26 +115,6 @@ const SignUp = () => {
     </div>
    </div>
    <div className="flex absolute bottom-5 right-5">
-    {error && (
-     <Toast className="ml-auto mt-auto ">
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-       <HiExclamation className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">{error}.</div>
-      <ToastToggle />
-     </Toast>
-    )}
-    {done && (
-     <Toast>
-      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-       <HiCheck className="h-5 w-5" />
-      </div>
-      <div className="ml-3 text-sm font-normal">
-       Account created successfully.
-      </div>
-      <ToastToggle />
-     </Toast>
-    )}
    </div>
   </div>
  );
