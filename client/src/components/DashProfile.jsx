@@ -138,10 +138,11 @@ const DashProfile = () => {
     dispatch(deleteFailure(data.message));
     toast.error(data.message);
    } else {
-    toast.success("Account delete successfully!");
-    setTimeout(() => {
-     dispatch(deleteSuccess(data));
-    }, 2000);
+    // toast.success("Account delete successfully!");
+   
+       dispatch(deleteSuccess());
+  
+    
    }
   } catch (error) {
    toast.error(error.message);
