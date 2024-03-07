@@ -1,8 +1,9 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import { Button, TextInput } from "flowbite-react";
+import { Button, Modal, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
  getDownloadURL,
  ref,
@@ -17,8 +18,10 @@ import {
  updateStart,
  updateSuccess,
  updateFailure,
+ deleteStart,
+ deleteSuccess,
+ deleteFailure,
 } from "./../redux/user/userSlice.js";
-
 
 const DashProfile = () => {
  const { currentUser } = useSelector((state) => state.user);
@@ -28,8 +31,8 @@ const DashProfile = () => {
  const [imgFileUploadingError, setImgFileUploadingError] = useState(null);
  const [imgFileUploading, setImgFileUploading] = useState(false);
  const [formData, setFormData] = useState({});
+ const [showModel, setShowModel] = useState(false);
  const filePickerRef = useRef();
-
 
  const dispatch = useDispatch();
 
@@ -79,7 +82,7 @@ const DashProfile = () => {
      setFormData({ ...formData, profilePicture: downloadURL });
      setImgFileUploadingError(false);
      setImgFileUploading(false);
-     toast.success('Image uploaded successfully!')
+     toast.success("Image uploaded successfully!");
     });
    }
   );
@@ -90,13 +93,13 @@ const DashProfile = () => {
  const handelSubmit = async (e) => {
   e.preventDefault();
   if (Object.keys(formData).length === 0) {
-    toast.error('No changes made');
+   toast.error("No changes made");
    return;
-  } 
-   if (imgFileUploading) {
-    toast.warning('Please wait for image to upload!')
-     return
-  };
+  }
+  if (imgFileUploading) {
+   toast.warning("Please wait for image to upload!");
+   return;
+  }
   try {
    dispatch(updateStart());
    const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -113,12 +116,35 @@ const DashProfile = () => {
     return;
    } else {
     dispatch(updateSuccess(data));
-     toast.success("Data is updated successfully!");
-     setFormData({});
+    toast.success("Data is updated successfully!");
+    setFormData({});
    }
   } catch (err) {
-    dispatch(updateFailure(err.message));
-    toast.error(`${err.message}.`);
+   dispatch(updateFailure(err.message));
+   toast.error(`${err.message}.`);
+  }
+ };
+
+ const handelDeleteUser = async () => {
+  setShowModel(false);
+  try {
+   dispatch(deleteStart());
+   const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+    method: "DELETE",
+   });
+   const data = await res.json();
+   if (!res.ok) {
+    dispatch(deleteFailure(data.message));
+    toast.error(data.message);
+   } else {
+    toast.success("Account delete successfully!");
+    setTimeout(() => {
+     dispatch(deleteSuccess(data));
+    }, 2000);
+   }
+  } catch (error) {
+   toast.error(error.message);
+   dispatch(deleteFailure(error.message));
   }
  };
 
@@ -198,10 +224,37 @@ const DashProfile = () => {
     </Button>
    </form>
    <div className="text-red-500 flex justify-between mt-5 ">
-    <Button color="red" className="cursor-pointer">Delete Account</Button>
-    <Button color="red" className="cursor-pointer">Sign Out</Button>
+    <Button
+     color="red"
+     onClick={() => setShowModel(true)}
+     className="cursor-pointer"
+    >
+     Delete Account
+    </Button>
+    <Button color="red" className="cursor-pointer">
+     Sign Out
+    </Button>
    </div>
    <div className="flex absolute bottom-5 right-5"></div>
+   <Modal show={showModel} onClose={() => setShowModel(false)} popup size="md">
+    <Modal.Header />
+    <Modal.Body>
+     <div className="text-center">
+      <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+      <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+       Are you sure you want to delete your account?
+      </h3>
+      <div className="flex justify-between gap-4">
+       <Button color="failure" onClick={handelDeleteUser}>
+        Yes, I'm sure
+       </Button>
+       <Button color="gray" onClick={() => setShowModel(false)}>
+        Cancel
+       </Button>
+      </div>
+     </div>
+    </Modal.Body>
+   </Modal>
   </div>
  );
 };
