@@ -21,6 +21,7 @@ import {
  deleteStart,
  deleteSuccess,
  deleteFailure,
+ signoutSuccess,
 } from "./../redux/user/userSlice.js";
 
 const DashProfile = () => {
@@ -148,6 +149,25 @@ const DashProfile = () => {
   }
  };
 
+  const handelSignout = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method:'POST',
+      })
+      const data = await res.json();
+      if (!res.ok) {
+       toast.error(data.message);
+      } else {
+        // toast.success("Signe out seccess!");
+         setTimeout(() => {
+          dispatch(signoutSuccess(data));
+         }, 2000);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+  
  useEffect(() => {
   if (imgFile) uploadImage();
  }, [imgFile]);
@@ -231,7 +251,11 @@ const DashProfile = () => {
     >
      Delete Account
     </Button>
-    <Button color="red" className="cursor-pointer">
+       <Button
+         color="red"
+         className="cursor-pointer"
+          onClick={handelSignout}
+       >
      Sign Out
     </Button>
    </div>

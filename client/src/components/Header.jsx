@@ -1,17 +1,37 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
+import { signoutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
   const { theme } = useSelector(state => state.theme);
- const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
+  const handelSignout = async () => {
+   try {
+    const res = await fetch("/api/user/signout", {
+     method: "POST",
+    });
+    const data = await res.json();
+    if (!res.ok) {
+     toast.error(data.message);
+    } else {
+     setTimeout(() => {
+      dispatch(signoutSuccess(data));
+     }, 2000);
+    }
+   } catch (error) {
+    toast.error(error.message);
+   }
+  };
  return (
   <Navbar className="border-b-2">
    <Link
@@ -21,7 +41,8 @@ const Header = () => {
     BiteBard
    </Link>
 
-   <div className="flex gap-2 md:order-2">
+     <div className="flex gap-2 md:order-2">
+       <ToastContainer />
     <form>
      <TextInput
       type="text"
@@ -53,7 +74,7 @@ const Header = () => {
        <Dropdown.Item>Profile</Dropdown.Item>
       </Link>
       <Dropdown.Divider />
-      <Dropdown.Item>Sign out</Dropdown.Item>
+      <Dropdown.Item onClick={handelSignout}>Sign out</Dropdown.Item>
      </Dropdown>
     ) : (
      <Link to="/sign-in">
