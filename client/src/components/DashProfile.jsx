@@ -2,6 +2,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Button, Modal, TextInput } from "flowbite-react";
 import { useEffect, useRef, useState } from "react";
+import {Link} from 'react-router-dom'
 import { useSelector, useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
@@ -12,6 +13,7 @@ import {
 } from "firebase/storage";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+
 
 import { app } from "./../firebase";
 import {
@@ -25,7 +27,7 @@ import {
 } from "./../redux/user/userSlice.js";
 
 const DashProfile = () => {
- const { currentUser } = useSelector((state) => state.user);
+ const { currentUser ,loading} = useSelector((state) => state.user);
  const [imgFile, setImgFile] = useState(null);
  const [imageFileUrl, setImageFileUrl] = useState(null);
  const [imgFileUploadingProgress, setImgFileUploadingProgress] = useState(null);
@@ -138,11 +140,7 @@ const DashProfile = () => {
     dispatch(deleteFailure(data.message));
     toast.error(data.message);
    } else {
-    // toast.success("Account delete successfully!");
-   
-       dispatch(deleteSuccess());
-  
-    
+    dispatch(deleteSuccess());
    }
   } catch (error) {
    toast.error(error.message);
@@ -150,32 +148,38 @@ const DashProfile = () => {
   }
  };
 
-  const handelSignout = async () => {
-    try {
-      const res = await fetch('/api/user/signout', {
-        method:'POST',
-      })
-      const data = await res.json();
-      if (!res.ok) {
-       toast.error(data.message);
-      } else {
-        // toast.success("Signe out seccess!");
-         setTimeout(() => {
-          dispatch(signoutSuccess(data));
-         }, 2000);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
+ const handelSignout = async () => {
+  try {
+   const res = await fetch("/api/user/signout", {
+    method: "POST",
+   });
+   const data = await res.json();
+   if (!res.ok) {
+    toast.error(data.message);
+   } else {
+     dispatch(signoutSuccess(data));
+   }
+  } catch (error) {
+   toast.error(error.message);
   }
-  
+ };
+
  useEffect(() => {
   if (imgFile) uploadImage();
  }, [imgFile]);
 
  return (
   <div className="mx-auto max-w-lg p-3 w-full">
-   <ToastContainer theme={useSelector((state) => state.theme).theme} />
+   <ToastContainer
+    theme={useSelector((state) => state.theme).theme}
+    closeOnClick
+    pauseOnHover
+    pauseOnFocusLoss
+    draggable
+       autoClose={3000}
+       limit={3}
+   />
+   
    <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
    <form onSubmit={handelSubmit} className="flex flex-col gap-4">
     <input
@@ -239,10 +243,18 @@ const DashProfile = () => {
      placeholder="********"
      onChange={handelChange}
     />
-    <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-     {" "}
-     Update
-    </Button>
+    <Button type="submit" gradientDuoTone="purpleToBlue" outline disabled={loading||imgFileUploading}>
+      {loading || imgFileUploading ?'Loading...':'Update'}
+       </Button>
+       {
+         currentUser.isAdmin && (
+           <Link to={'/create-post'}>
+           <Button type="button" gradientDuoTone='purpleToPink' className="w-full" outline >
+             Create a post
+           </Button>
+           </Link>
+         )
+       }
    </form>
    <div className="text-red-500 flex justify-between mt-5 ">
     <Button
@@ -252,11 +264,7 @@ const DashProfile = () => {
     >
      Delete Account
     </Button>
-       <Button
-         color="red"
-         className="cursor-pointer"
-          onClick={handelSignout}
-       >
+    <Button color="red" className="cursor-pointer" onClick={handelSignout}>
      Sign Out
     </Button>
    </div>

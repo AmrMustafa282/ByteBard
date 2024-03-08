@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import { errorHandler } from "../utils/error.js";
 
 export const updateUser = async (req, res, next) => {
- if (req.user.userId !== req.params.userId) {
+ if (req.user.id !== req.params.userId) {
   return next(errorHandler(403, "You are noe allowed to update this user!"));
  }
  if (req.body.password) {
@@ -35,7 +35,8 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  if (req.user.userId !== req.params.userId) {
+  // console.log(req.user.id, req.params.userId)
+  if (req.user.id !== req.params.userId) {
    return next(errorHandler(403, "You are noe allowed to update this user!"));
   }
   try {

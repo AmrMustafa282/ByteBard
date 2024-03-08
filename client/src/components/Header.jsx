@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -11,29 +11,29 @@ import { toggleTheme } from "../redux/theme/themeSlice";
 import { signoutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
-  const path = useLocation().pathname;
+ const path = useLocation().pathname;
   const dispatch = useDispatch();
-  const { theme } = useSelector(state => state.theme);
-  const { currentUser } = useSelector((state) => state.user);
-  const handelSignout = async () => {
-   try {
-    const res = await fetch("/api/user/signout", {
-     method: "POST",
-    });
-    const data = await res.json();
-    if (!res.ok) {
-     toast.error(data.message);
-    } else {
-     setTimeout(() => {
-      dispatch(signoutSuccess(data));
-     }, 2000);
-    }
-   } catch (error) {
-    toast.error(error.message);
+  const navigate = useNavigate();
+ const { theme } = useSelector((state) => state.theme);
+ const { currentUser } = useSelector((state) => state.user);
+ const handelSignout = async () => {
+  try {
+   const res = await fetch("/api/user/signout", {
+    method: "POST",
+   });
+   const data = await res.json();
+   if (!res.ok) {
+    toast.error(data.message);
+   } else {
+     dispatch(signoutSuccess(data));
+      navigate("/sign-in");
    }
-  };
+  } catch (error) {
+   toast.error(error.message);
+  }
+ };
  return (
-  <Navbar className="border-b-2">
+  <Navbar className="border-b-2 " >
    <Link
     to="/"
     className="self-center text-sm sm:text-xl lg:text-4xl font-semibold px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white"
@@ -41,8 +41,15 @@ const Header = () => {
     BiteBard
    </Link>
 
-     <div className="flex gap-2 md:order-2">
-       <ToastContainer />
+   <div className="flex gap-2 md:order-2">
+    <ToastContainer
+     theme={useSelector((state) => state.theme).theme}
+     hideProgressBar={false}
+     closeOnClick={true}
+     pauseOnHover={true}
+     draggable={true}
+     transition="Bounce"
+    />
     <form>
      <TextInput
       type="text"
@@ -55,8 +62,12 @@ const Header = () => {
      <AiOutlineSearch />
     </Button>
 
-    <Button className="w-12 h-10  sm:inline" color="gray" onClick={()=>dispatch(toggleTheme())}>
-     {theme==='light'?<FaSun />: <FaMoon />}
+    <Button
+     className="w-12 h-10  sm:inline"
+     color="gray"
+     onClick={() => dispatch(toggleTheme())}
+    >
+     {theme === "light" ? <FaSun /> : <FaMoon />}
     </Button>
     {currentUser ? (
      <Dropdown

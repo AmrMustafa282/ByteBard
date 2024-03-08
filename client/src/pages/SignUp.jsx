@@ -6,7 +6,6 @@ import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import OAuth from "../components/OAuth";
 import { useSelector } from "react-redux";
 
-
 const SignUp = () => {
  const [formData, setFormData] = useState({});
  const [loading, setLoading] = useState(false);
@@ -16,9 +15,9 @@ const SignUp = () => {
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-   if (!formData.name || !formData.email || !formData.password) {
-    toast.error("Please fill out all fields!");
-   return ;
+  if (!formData.name || !formData.email || !formData.password) {
+   toast.error("Please fill out all fields!");
+   return;
   }
   try {
    setLoading(true);
@@ -29,9 +28,9 @@ const SignUp = () => {
    });
    const data = await res.json();
    if (data.status === "failed") {
-     setLoading(false);
-     toast.error(data.message);
-    return ;
+    setLoading(false);
+    toast.error(data.message);
+    return;
    }
    setLoading(false);
    if (res.ok) {
@@ -41,7 +40,7 @@ const SignUp = () => {
     }, 2000);
    }
   } catch (error) {
-    toast.error(error.message);
+   toast.error(error.message);
    setLoading(false);
   }
  };
@@ -49,7 +48,15 @@ const SignUp = () => {
 
  return (
   <div className="min-h-[55vh] mt-20 relative">
-   <ToastContainer theme={useSelector((state) => state.theme).theme} />
+   <ToastContainer
+    theme={useSelector((state) => state.theme).theme}
+    closeOnClick
+    pauseOnHover
+    pauseOnFocusLoss
+    draggable
+    autoClose={3000}
+    limit={3}
+   />
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">
@@ -114,8 +121,7 @@ const SignUp = () => {
      </div>
     </div>
    </div>
-   <div className="flex absolute bottom-5 right-5">
-   </div>
+   <div className="flex absolute bottom-5 right-5"></div>
   </div>
  );
 };

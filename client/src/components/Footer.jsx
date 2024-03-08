@@ -7,9 +7,9 @@ const FooterFC = () => {
   return (
    <Footer
     container
-    className="rounded-none mt-auto border-t-2 dark:border-t-1 dark:border-t-gray-700 "
+    className=" rounded-none mt-auto border-t-2 dark:border-t-1 dark:border-t-gray-700 "
    >
-    <div className="w-full max-w-7xl mx-auto ">
+    <div className=" w-full max-w-7xl mx-auto ">
      <div className="grid w-full justify-between sm:flex md:grid-cols-1">
       <div className="mt-5 ">
        <Link

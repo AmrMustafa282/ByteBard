@@ -13,15 +13,15 @@ const Dashboard = () => {
   },[location.search])
 
   return (
-    <div className="flex flex-grow flex-col md:flex-row"> 
-      <div className='md:w-56'>
-        {/* Sidebar */}
-        <DashSidebar />
-      </div>
-      {/* profile ... */}
-      {tab === 'profile' && <DashProfile />}
+   <div className="6xl:container 6xl:mx-auto flex flex-grow flex-col md:flex-row">
+    <div className="md:w-56">
+     {/* Sidebar */}
+     <DashSidebar />
     </div>
-  )
+    {/* profile ... */}
+    {tab === "profile" && <DashProfile />}
+   </div>
+  );
 }
 
 export default Dashboard

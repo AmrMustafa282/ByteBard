@@ -12,7 +12,6 @@ import {
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 
-
 const SignIn = () => {
  const [formData, setFormData] = useState({});
 
@@ -25,8 +24,8 @@ const SignIn = () => {
  };
  const handelSubmit = async (e) => {
   e.preventDefault();
-   if (!formData.email || !formData.password) {
-    toast.error("Please fill out all fields!");
+  if (!formData.email || !formData.password) {
+   toast.error("Please fill out all fields!");
    return dispatch(signInFailure("Please fill out all fields!"));
   }
   try {
@@ -44,7 +43,7 @@ const SignIn = () => {
    //  setLoading(false);
    if (res.ok) {
     dispatch(signInSuccess(data));
-    toast.success('Logged in successfully!');
+    toast.success("Logged in successfully!");
     setTimeout(() => {
      navigate("/");
     }, 2000);
@@ -56,7 +55,15 @@ const SignIn = () => {
 
  return (
   <div className="min-h-[55vh] mt-20 relative">
-   <ToastContainer theme={useSelector((state) => state.theme).theme} />
+   <ToastContainer
+    theme={useSelector((state) => state.theme).theme}
+    closeOnClick
+    pauseOnHover
+    pauseOnFocusLoss
+    draggable
+    autoClose={3000}
+    limit={3}
+   />
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">
@@ -112,8 +119,7 @@ const SignIn = () => {
      </div>
     </div>
    </div>
-   <div className="flex absolute bottom-5 right-5">
-   </div>
+   <div className="flex absolute bottom-5 right-5"></div>
   </div>
  );
 };

@@ -1,15 +1,16 @@
 import { Sidebar } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { HiUser, HiArrowSmRight } from "react-icons/hi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { signoutSuccess } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const DashSidebar = () => {
   const location = useLocation();
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+ const dispatch = useDispatch();
  const [tab, setTab] = useState("");
  const handelSignout = async () => {
   try {
@@ -20,9 +21,8 @@ const DashSidebar = () => {
    if (!res.ok) {
     toast.error(data.message);
    } else {
-    setTimeout(() => {
      dispatch(signoutSuccess(data));
-    }, 2000);
+     navigate('/sign-in')
    }
   } catch (error) {
    toast.error(error.message);
@@ -32,30 +32,43 @@ const DashSidebar = () => {
   const urlParams = new URLSearchParams(location.search);
   if (urlParams.get("tab")) setTab(urlParams.get("tab"));
  }, [location.search]);
-  return (
-    <>
-      <ToastContainer />
-   <Sidebar className="w-full md:w-56">
-   <Sidebar.Items>
-    <Sidebar.ItemGroup>
-     <Link to="/dashboard?tab=profile">
-      <Sidebar.Item
-       active={tab === "profile"}
-       icon={HiUser}
-       label={"User"}
-       labelColor="dark"
-       as="div"
+ return (
+  <>
+   <ToastContainer
+    theme={useSelector((state) => state.theme).theme}
+    closeOnClick
+    pauseOnHover
+    pauseOnFocusLoss
+    draggable
+    autoClose={3000}
+    limit={3}
+   />
+   <Sidebar className="w-full md:w-56 border-r dark:border-r-gray-700 ">
+    <Sidebar.Items>
+     <Sidebar.ItemGroup>
+      <Link to="/dashboard?tab=profile">
+       <Sidebar.Item
+        active={tab === "profile"}
+        icon={HiUser}
+        label={"User"}
+        labelColor="dark"
+        as="div"
        >
-       Profile
+        Profile
+       </Sidebar.Item>
+      </Link>
+      <Sidebar.Item
+       onClick={handelSignout}
+       icon={HiArrowSmRight}
+       as="div"
+       className="cursor-pointer"
+      >
+       Sign Out
       </Sidebar.Item>
-     </Link>
-     <Sidebar.Item onClick={handelSignout} icon={HiArrowSmRight} as="div" className='cursor-pointer'>
-      Sign Out
-     </Sidebar.Item>
-    </Sidebar.ItemGroup>
-   </Sidebar.Items>
-  </Sidebar>
-        </>
+     </Sidebar.ItemGroup>
+    </Sidebar.Items>
+   </Sidebar>
+  </>
  );
 };
 
