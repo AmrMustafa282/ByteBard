@@ -15,7 +15,7 @@ import OAuth from "../components/OAuth";
 const SignIn = () => {
  const [formData, setFormData] = useState({});
 
- const { loading, error } = useSelector((state) => state.user);
+ const { loading } = useSelector((state) => state.user);
 
  const navigate = useNavigate();
  const dispatch = useDispatch();
@@ -43,10 +43,10 @@ const SignIn = () => {
    //  setLoading(false);
    if (res.ok) {
     dispatch(signInSuccess(data));
-    toast.success("Logged in successfully!");
-    setTimeout(() => {
+    // toast.success("Logged in successfully!");
+    // setTimeout(() => {
      navigate("/");
-    }, 2000);
+    // }, 2000);
    }
   } catch (error) {
    dispatch(signInFailure(error.message));

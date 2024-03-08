@@ -118,7 +118,7 @@ const CreatePost = () => {
       toast.success('Post published successfully!');
       setFormData({});
       setTimeout(() => {
-        navigate(`/post/${data.slug}`)
+        navigate(`/posts/${data.slug}`)
       },2000)
 
     } catch (error) {

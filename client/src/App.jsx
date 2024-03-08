@@ -1,4 +1,5 @@
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+// import { useSelector } from "react-redux";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -11,6 +12,9 @@ import FooterFC from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
+
+// import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer, toast } from "react-toastify";
 
 function App() {
  return (
