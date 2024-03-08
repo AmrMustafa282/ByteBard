@@ -2,7 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+.dark .ql-toolbar.ql-snow {
+  border-top: solid gray 1px;
+  border-bottom: solid gray 1px;
+  border-left: solid gray 1px;
+  border-right: solid gray 1px;
 
-.ql-editor{
+}
+.ql-toolbar.ql-snow{
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+}
+
+.dark .ql-container {
+  border-bottom: solid gray 1px !important;
+  border-left: solid gray 1px !important;
+  border-right: solid gray 1px !important;
+}
+.ql-container{
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+}
+
+.ql-editor.ql-blank{
   font-size: 1.05rem;
 }
+
