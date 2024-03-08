@@ -12,8 +12,8 @@ import { signoutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
  const path = useLocation().pathname;
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+ const dispatch = useDispatch();
+ const navigate = useNavigate();
  const { theme } = useSelector((state) => state.theme);
  const { currentUser } = useSelector((state) => state.user);
  const handelSignout = async () => {
@@ -25,20 +25,20 @@ const Header = () => {
    if (!res.ok) {
     toast.error(data.message);
    } else {
-     dispatch(signoutSuccess(data));
-      navigate("/sign-in");
+    dispatch(signoutSuccess(data));
+    navigate("/sign-in");
    }
   } catch (error) {
    toast.error(error.message);
   }
  };
  return (
-  <Navbar className="border-b-2 " >
+  <Navbar className="border-b-2 ">
    <Link
     to="/"
     className="self-center text-sm sm:text-xl lg:text-4xl font-semibold px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white"
    >
-    BiteBard
+    ByteBard
    </Link>
 
    <div className="flex gap-2 md:order-2">

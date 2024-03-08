@@ -13,10 +13,12 @@ import "react-circular-progressbar/dist/styles.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { app } from "../firebase";
 
 const CreatePost = () => {
+  const navigate = useNavigate();
  const [file, setFile] = useState(null);
  const [imgUplaodProgress, setImgUplaodProgress] = useState(null);
  const [formData, setFormData] = useState({});
@@ -80,8 +82,8 @@ const CreatePost = () => {
       },
       async () => {
        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setFormData({ ...formData, image: downloadURL });
-        setImgUplaodProgress(null);
+       setFormData({ ...formData, image: downloadURL });
+       setImgUplaodProgress(null);
        resolve(downloadURL);
       }
      );
@@ -98,6 +100,32 @@ const CreatePost = () => {
   }
  };
 
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/post/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify(formData)
+      })
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error('Publish failed!')
+        return
+      }
+      toast.success('Post published successfully!');
+      setFormData({});
+      setTimeout(() => {
+        navigate(`/post/${data.slug}`)
+      },2000)
+
+    } catch (error) {
+      toast.error('Something went wrong, make sure you chosed a unique title and filled the content.');
+    }
+  }
+  
  return (
   <div className="p-3 max-w-3xl mx-auto  w-full">
    <ToastContainer
@@ -110,7 +138,7 @@ const CreatePost = () => {
     limit={3}
    />
    <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
-   <form className="flex flex-col gap-4">
+   <form onSubmit={handelSubmit} className="flex flex-col gap-4">
     <div className="flex flex-col gap-4 sm:flex-row justify-between">
      <TextInput
       type="text"
@@ -118,8 +146,15 @@ const CreatePost = () => {
       required
       id="title"
       className="flex-1"
+      onChange={(e) => {
+       setFormData({ ...formData, title: e.target.value });
+      }}
      />
-     <Select>
+     <Select
+      onChange={(e) => {
+       setFormData({ ...formData, category: e.target.value });
+      }}
+     >
       <option value="uncategorized">Select a category</option>
       <option value="javascript">JavaScript</option>
       <option value="reactjs">React.js</option>
@@ -143,7 +178,7 @@ const CreatePost = () => {
       onClick={handelUploadImage}
       disabled={imgUplaodProgress}
      >
-      {!imgUplaodProgress ? "Upload Image" : 'Pending...'}
+      {!imgUplaodProgress ? "Upload Image" : "Pending..."}
      </Button>
     </div>
     {formData.image && (
@@ -158,6 +193,9 @@ const CreatePost = () => {
      placeholder="Write something..."
      className="h-72 mb-12 "
      required
+     onChange={(value) => {
+      setFormData({ ...formData, content:value });
+     }}
     />
     <Button type="submit" gradientDuoTone="purpleToPink">
      Publish
