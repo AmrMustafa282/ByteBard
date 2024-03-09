@@ -34,7 +34,7 @@ const DashPosts = () => {
   const startIndex = userPosts.length;
   try {
    const res = await axios.get(
-    `/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`
+    `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
    );
    if (res.status === 200) {
     setUserPosts((prev) => [...prev, ...res.data.posts]);

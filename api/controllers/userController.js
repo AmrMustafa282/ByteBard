@@ -69,20 +69,18 @@ export const getUsers = async (req, res, next) => {
      .sort({ createdAt: sortDirection })
      .skip(startIndex)
       .limit(limit);
-    // users = users.map((user) => {
-    //   const { password, ...rest } = user._doc;
-    //   return rest;
-    // });
+
     const totalUsers = await User.countDocuments();
+    
     const now = new Date();
     const oneMonthAgo = new Date(
      now.getFullYear(),
      now.getMonth() - 1,
-     now.getDate
+     now.getDate()
     );
 
     const lastMonthUsers = await User.countDocuments({
-     createAt: { $gte: oneMonthAgo },
+     createdAt: { $gte: oneMonthAgo },
     });
 
     res.status(200).json({
@@ -94,4 +92,41 @@ export const getUsers = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+}
+
+export const banUserByAdmin = async (req, res, next) => {
+   const { userToBanId, userId } = req.params;
+   if (!req.user.isAdmin || userId !== req.user.id) {
+    return next(errorHandler(403, "You are not allowed to create a post!"));
+   }
+   if (!userToBanId || !userId) {
+    return next(errorHandler(400, "userToBanId and userId is needed!"));
+   }
+   try {
+    const banedUser = await User.findByIdAndUpdate( userToBanId,{isActive: false},{ new: true });
+    if (!banedUser) {
+     return next(errorHandler(404, "Cant found this post!"));
+    }
+    res.status(201).json('User has been baned!');
+   } catch (error) {
+    next(error);
+   }
+}
+export const deleteUserByAdmin = async (req, res, next) => {
+   const { userToDeleteId, userId } = req.params;
+   if (!req.user.isAdmin || userId !== req.user.id) {
+    return next(errorHandler(403, "You are not allowed to create a post!"));
+   }
+   if (!userToDeleteId || !userId) {
+    return next(errorHandler(400, "userToDeleteId and userId is needed!"));
+   }
+   try {
+    const banedUser = await User.findByIdAndDelete( userToDeleteId);
+    if (!banedUser) {
+     return next(errorHandler(404, "Cant found this post!"));
+    }
+    res.status(201).json('User has been deleted!');
+   } catch (error) {
+    next(error);
+   }
 }
