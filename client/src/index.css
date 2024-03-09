@@ -27,14 +27,3 @@
 .ql-editor.ql-blank{
   font-size: 1.05rem;
 }
-
-
-.hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  overflow-y: scroll; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}

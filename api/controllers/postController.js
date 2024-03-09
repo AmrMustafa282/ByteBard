@@ -9,6 +9,7 @@ export const create = async (req, res, next) => {
   return next(errorHandler(400, "Please provide all required fields!"));
  }
  const slug = req.body.title
+  .trim()
   .split(" ")
   .join("-")
   .toLowerCase()
@@ -45,30 +46,29 @@ export const getPosts = async (req, res, next) => {
      { title: { $regex: req.query.searchTerm, $options: "i" } },
      { content: { $regex: req.query.searchTerm, $options: "i" } },
     ],
-   })}
-  )
+   }),
+  })
    .sort({ updatedAt: sortDirection })
    .skip(startIndex)
-     .limit(limit);
-   
-   const totalPosts = await Post.countDocuments();
-   const now = new Date();
-   const oneMonthAgo = new Date(
-     now.getFullYear(),
-     now.getMonth() - 1,
-     now.getDate
-   )
+   .limit(limit);
 
-   const lastMonthPosts = await Post.countDocuments({
-     createAt:{$gte: oneMonthAgo}
-   })
+  const totalPosts = await Post.countDocuments();
+  const now = new Date();
+  const oneMonthAgo = new Date(
+   now.getFullYear(),
+   now.getMonth() - 1,
+   now.getDate
+  );
 
-   res.status(200).json({
-     posts,
-     totalPosts,
-     lastMonthPosts,
-   })
-   
+  const lastMonthPosts = await Post.countDocuments({
+   createAt: { $gte: oneMonthAgo },
+  });
+
+  res.status(200).json({
+   posts,
+   totalPosts,
+   lastMonthPosts,
+  });
  } catch (error) {
   next(error);
  }
