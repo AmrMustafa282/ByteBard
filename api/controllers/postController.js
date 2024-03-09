@@ -73,3 +73,40 @@ export const getPosts = async (req, res, next) => {
   next(error);
  }
 };
+
+export const deletePost = async (req, res, next) => {
+  const { postId, userId } = req.params;
+  if (!req.user.isAdmin || userId !== req.user.id) {
+   return next(errorHandler(403, "You are not allowed to create a post!"));
+  }
+  if (!postId || !userId) {
+    return next(errorHandler(400,"postId and userId is needed!"))
+  }
+  try {
+    const post = await Post.findByIdAndDelete(postId);
+    if (!post) {
+      return next(errorHandler(404, "Cant found this post!"));
+    }
+   res.status(201).json("post deleted successfully");
+  } catch (error) {
+   next(error);
+  }
+}
+export const editPost = async (req, res, next) => {
+  const { postId, userId } = req.params;
+  if (!req.user.isAdmin || userId !== req.user.id) {
+   return next(errorHandler(403, "You are not allowed to create a post!"));
+  }
+  if (!postId || !userId) {
+   return next(errorHandler(400, "postId and userId is needed!"));
+  }
+  try {
+    const editedPost = await Post.findByIdAndUpdate(postId, req.body);
+   if (!editedPost) {
+    return next(errorHandler(404, "Cant found this post!"));
+   }
+   res.status(201).json({editedPost});
+  } catch (error) {
+   next(error);
+  }
+}
