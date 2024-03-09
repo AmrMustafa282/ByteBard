@@ -12,6 +12,7 @@ import FooterFC from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
+import UpdatePost from "./pages/UpdataPost";
 
 // import "react-toastify/dist/ReactToastify.css";
 // import { ToastContainer, toast } from "react-toastify";
@@ -29,6 +30,9 @@ function App() {
     </Route>
     <Route element={<OnlyAdminPrivateRoute />}>
      <Route path="/create-post" element={<CreatePost />} />
+    </Route>
+    <Route element={<OnlyAdminPrivateRoute />}>
+     <Route path="/update-post/:postId" element={<UpdatePost />} />
     </Route>
     <Route path="/sign-up" element={<SignUp />} />
     <Route path="/sign-in" element={<SignIn />} />
