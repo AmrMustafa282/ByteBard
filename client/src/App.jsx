@@ -15,8 +15,7 @@ import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import UpdatePost from "./pages/UpdataPost";
 import PostPage from "./pages/PostPage";
 
-// import "react-toastify/dist/ReactToastify.css";
-// import { ToastContainer, toast } from "react-toastify";
+
 
 function App() {
  return (

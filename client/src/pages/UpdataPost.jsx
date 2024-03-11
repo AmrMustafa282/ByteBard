@@ -19,13 +19,11 @@ import { app } from "../firebase";
 import axios from "axios";
 
 const UpdatePost = () => {
- const navigate = useNavigate();
  const { postId } = useParams();
  const { currentUser } = useSelector((state) => state.user);
  const [file, setFile] = useState(null);
  const [imgUplaodProgress, setImgUplaodProgress] = useState(null);
  const [formData, setFormData] = useState({});
-
 
  const handelUploadImage = async () => {
   try {
@@ -69,6 +67,7 @@ const UpdatePost = () => {
    toast.error("Image upload failed");
   }
  };
+
  const handelSubmit = async (e) => {
   e.preventDefault();
   try {
@@ -87,6 +86,8 @@ const UpdatePost = () => {
     toast.error("Update failed!");
     return;
    }
+   // console.log(data)
+
    toast.success("Post updated successfully!");
    setFormData(data.updatedPost);
   } catch (error) {
@@ -107,6 +108,7 @@ const UpdatePost = () => {
    return toast.error(error.message);
   }
  };
+
  useEffect(() => {
   fetchPost();
  }, [postId]);
@@ -174,6 +176,7 @@ const UpdatePost = () => {
       className="w-full h-96 object-cover "
      />
     )}
+
     <ReactQuill
      theme="snow"
      placeholder="Write something..."
@@ -184,6 +187,7 @@ const UpdatePost = () => {
       setFormData({ ...formData, content: value });
      }}
     />
+
     <Button type="submit" gradientDuoTone="purpleToPink">
      Update
     </Button>

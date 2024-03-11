@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>React Documentation</title>
+</head>
+<body>
+
+<div id='learn-react'>
+  <h1>LEARN REACT</h1>
+</div>
+
+<div id='quick-start'>
+  <h2>Quick Start</h2>
+  <p>Welcome to the React documentation! This page will give you an introduction to the 80% of React concepts that you will use on a daily basis.</p>
+  <h3>You will learn</h3>
+  <ul>
+    <li>How to create and nest components</li>
+    <li>How to add markup and styles</li>
+    <li>How to display data</li>
+    <li>How to render conditions and lists</li>
+    <li>How to respond to events and update the screen</li>
+    <li>How to share data between components</li>
+  </ul>
+</div>
+
+<div id='creating-and-nesting-components'>
+  <h2>Creating and nesting components</h2>
+  <p>React apps are made out of components. A component is a piece of the UI (user interface) that has its own logic and appearance. A component can be as small as a button, or as large as an entire page.</p>
+  <p>React components are JavaScript functions that return markup:</p>
+  <pre><code>function MyButton() {
+  return (
+    &lt;button&gt;I'm a button&lt;/button&gt;
+  );
+}</code></pre>
+  <p>Now that you’ve declared <code>MyButton</code>, you can nest it into another component:</p>
+  <pre><code>export default function MyApp() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Welcome to my app&lt;/h1&gt;
+      &lt;MyButton /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+  <p>Notice that <code>&lt;MyButton /&gt;</code> starts with a capital letter. That’s how you know it’s a React component. React component names must always start with a capital letter, while HTML tags must be lowercase.</p>
+</div>
+
+<div id='writing-markup-with-jsx'>
+  <h2>Writing markup with JSX</h2>
+  <p>The markup syntax you’ve seen above is called JSX. It is optional, but most React projects use JSX for its convenience. All of the tools we recommend for local development support JSX out of the box.</p>
+  <p>JSX is stricter than HTML. You have to close tags like <code>&lt;br /&gt;</code>. Your component also can’t return multiple JSX tags. You have to wrap them into a shared parent, like a <code>&lt;div&gt;...&lt;/div&gt;</code> or an empty <code>&lt;&gt;...&lt;/&gt;</code> wrapper:</p>
+  <pre><code>function AboutPage() {
+  return (
+    &lt;&gt;
+      &lt;h1&gt;About&lt;/h1&gt;
+      &lt;p&gt;Hello there.&lt;br /&gt;How do you do?&lt;/p&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+  <p>If you have a lot of HTML to port to JSX, you can use an online converter.</p>
+</div>
+
+<div id='adding-styles'>
+  <h2>Adding styles</h2>
+  <p>In React, you specify a CSS class with <code>className</code>. It works the same way as the HTML class attribute:</p>
+  <pre><code>&lt;img className='avatar' /&gt;</code></pre>
+  <p>Then you write the CSS rules for it in a separate CSS file:</p>
+  <pre><code>/* In your CSS */
+.avatar {
+  border-radius: 50%;
+}</code></pre>
+  <p>React does not prescribe how you add CSS files. In the simplest case, you’ll add a <code>&lt;link&gt;</code> tag to your HTML. If you use a build tool or a framework, consult its documentation to learn how to add a CSS file to your project.</p>
+</div>
+
+<div id='displaying-data'>
+  <h2>Displaying data</h2>
+  <p>JSX lets you put markup into JavaScript. Curly braces let you “escape back” into JavaScript so that you can embed some variable from your code and display it to the user. For example, this will display <code>user.name</code>:</p>
+  <pre><code>return (
+  &lt;h1&gt;
+    {user.name}
+  &lt;/h1&gt;
+);</code></pre>
+  <p>You can also “escape into JavaScript” from JSX attributes, but you have to use curly braces instead of quotes. For example, <code>className='avatar'</code> passes the 'avatar' string as the CSS class, but <code>src={user.imageUrl}</code> reads the JavaScript <code>user.imageUrl</code> variable value, and then passes that value as the <code>src</code> attribute:</p>
+  <pre><code>return (
+  &lt;img
+    className='avatar'
+    src={user.imageUrl}
+  /&gt;
+);</code></pre>
+</div>
+
+<div id='conditional-rendering'>
+  <h2>Conditional rendering</h2>
+  <p>In React, there is no special syntax for writing conditions. Instead, you’ll use the same techniques as you use when writing regular JavaScript code. For example, you can use an <code>if</code> statement to conditionally include JSX:</p>
+  <pre><code>let content;
+if (isLoggedIn) {
+  content = &lt;AdminPanel /&gt;;
+} else {
+  content = &lt;LoginForm /&gt;;
+}
+return (
+  &lt;div&gt;
+    {content}
+  &lt;/div&gt;
+);</code></pre>
+  <p>If you prefer more compact code, you can use the conditional <code>?</code> operator. Unlike <code>if</code>, it works inside JSX:</p>
+  <pre><code>&lt;div&gt;
+  {isLoggedIn ? (
+    &lt;AdminPanel /&gt;
+  ) : (
+    &lt;LoginForm /&gt;
+  )}
+&lt;/div&gt;</code></pre>
+  <p>When you don’t need the else branch, you can also use a shorter logical <code>&amp;&amp;</code> syntax:</p>
+  <pre><code>&lt;div&gt;
+  {isLoggedIn &amp;&amp; &lt;AdminPanel /&gt;}
+&lt;/div&gt;</code></pre>
+</div>
+
+<div id='rendering-lists'>
+  <h2>Rendering lists</h2>
+  <p>You will rely on JavaScript features like <code>for</code> loop and the array <code>map()</code> function to render lists of components.</p>
+  <p>For example, let’s say you have an array of products:</p>
+  <pre><code>const products = [
+  { title: 'Cabbage', id: 1 },
+  { title: 'Garlic', id: 2 },
+  { title: 'Apple', id: 3 },
+];</code></pre>
+  <p>Inside your component, use the <code>map()</code> function to transform an array of products into an array of <code>&lt;li&gt;</code> items:</p>
+  <pre><code>const listItems = products.map(product =&gt;
+  &lt;li key={product.id}&gt;
+    {product.title}
+  &lt;/li&gt;
+);
+
+return (
+  &lt;ul&gt;{listItems}&lt;/ul&gt;
+);</code></pre>
+  <p>Notice how <code>&lt;li&gt;</code> has a <code>key</code> attribute. For each item in a list, you should pass a string or a number that uniquely identifies that item among its siblings. Usually, a key should be coming from your data, such as a database ID. React uses your keys to know what happened if you later insert, delete, or reorder the items.</p>
+</div>
+
+<div id='responding-to-events'>
+  <h2>Responding to events</h2>
+  <p>You can respond to events by declaring event handler functions inside your components:</p>
+  <pre><code>function MyButton() {
+  function handleClick() {
+    alert('You clicked me!');
+  }
+
+  return (
+    &lt;button onClick={handleClick}&gt;
+      Click me
+    &lt;/button&gt;
+  );
+}</code></pre>
+  <p>Notice how <code>onClick={handleClick}</code> has no parentheses at the end! Do not call the event handler function: you only need to pass it down. React will call your event handler when the user clicks the button.</p>
+</div>
+
+<div id='updating-the-screen'>
+  <h2>Updating the screen</h2>
+  <p>Often, you’ll want your component to “remember” some information and display it. For example, maybe you want to count the number of times a button is clicked. To do this, add state to your component.</p>
+  <p>First, import <code>useState</code> from React:</p>
+  <pre><code>import { useState } from 'react';</code></pre>
+  <p>Now you can declare a state variable inside your component:</p>
+  <pre><code>function MyButton() {
+  const [count, setCount] = useState(0);
+  // ...
+}</code></pre>
+  <p>You’ll get two things from <code>useState</code>: the current state (<code>count</code>), and the function that lets you update it (<code>setCount</code>). You can give them any names, but the convention is to write <code>[something, setSomething]</code>.</p>
+</div>
+
+<div id='using-hooks'>
+  <h2>Using Hooks</h2>
+  <p>Functions starting with <code>use</code> are called Hooks. <code>useState</code> is a built-in Hook provided by React. You can find other built-in Hooks in the API reference. You can also write your own Hooks by combining the existing ones.</p>
+  <p>Hooks are more restrictive than other functions. You can only call Hooks at the top of your components (or other Hooks). If you want to use <code>useState</code> in a condition or a loop, extract a new component and put it there.</p>
+</div>
+
+<div id='sharing-data-between-components'>
+  <h2>Sharing data between components</h2>
+  <p>In the previous example, each <code>MyButton</code> had its own independent count, and when each button was clicked, only the count for the button clicked changed:</p>
+  <p>However, often you’ll need components to share data and always update together.</p>
+  <p>To make both <code>MyButton</code> components display the same count and update together, you need to move the state from the individual buttons “upwards” to the closest component containing all of them.</p>
+  <p>In this example, it is <code>MyApp</code>:</p>
+  <pre><code>export default function MyApp() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Counters that update separately&lt;/h1&gt;
+      &lt;MyButton /&gt;
+      &lt;MyButton /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+  <p>Then, pass the state down from <code>MyApp</code> to each <code>MyButton</code>, together with the shared click handler:</p>
+  <pre><code>export default function MyApp() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Counters that update together&lt;/h1&gt;
+      &lt;MyButton count={count} onClick={handleClick} /&gt;
+      &lt;MyButton count={count} onClick={handleClick} /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+  <p>The information you pass down like this is called props. Now the <code>MyApp</code> component contains the count state and the <code>handleClick</code> event handler, and passes both of them down as props to each of the buttons.</p>
+</div>
+
+<div id='next-steps'>
+  <h2>Next Steps</h2>
+  <p>By now, you know the basics of how to write React code!</p>
+  <p>Check out the Tutorial to put them into practice and build your first mini-app with React.</p>
+</div>
+
+</body>
+</html>

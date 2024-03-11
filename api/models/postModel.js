@@ -33,7 +33,6 @@ const postSchema = new mongoose.Schema(
  },
  {
   timestamps: true,
-  // toObject: { virtuals: true },
  }
 );
 postSchema.set("toJSON", { virtuals: true });
@@ -44,7 +43,6 @@ postSchema.virtual("user", {
  localField: "userId",
  foreignField: "_id"
 });
-
 
 const Post = mongoose.model("Post", postSchema);
 
