@@ -55,5 +55,11 @@ userSchema.methods.correctPassword = async function (
  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+userSchema.methods.toggleBan = async function () {
+ this.isActive = !this.isActive;
+  await this.save();
+  return this;
+};
+
 const User = mongoose.model("User", userSchema);
 export default User;

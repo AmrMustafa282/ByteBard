@@ -48,7 +48,7 @@ const DashUsers = () => {
   setShowModel(false);
   try {
    const res = await axios.delete(
-    `/api/user/delete/${userIdToDelete}/${currentUser._id}`
+    `/api/user/delete/${userIdToDelete}`
    );
    if (res.status === 201) {
     toast.success("User has been deleted");
@@ -64,13 +64,15 @@ const DashUsers = () => {
       setShowModel(false);
       try {
        const res = await axios.put(
-        `/api/user/ban/${userIdToBan}/${currentUser._id}`
+        `/api/user/ban/${userIdToBan}`
        );
        if (res.status === 201) {
-        toast.success("User has been baned");
+        toast.success(`User has been ${res.data.isActive?'unbanned': 'banned'}`);
         setUsers((prevUsers) =>
          prevUsers.map((user) =>
-          user._id === userIdToBan ? { ...user, isActive: false } : user
+          user._id === userIdToBan
+           ? { ...user, isActive: res.data.isActive }
+           : user
          )
         );
        } else {
@@ -132,21 +134,23 @@ const DashUsers = () => {
           <span
            onClick={() => {
             setShowModel(true);
-                  setModelMessage("Are you sure you want to ban this user?");
-                  setModelAction('ban')
+            setModelMessage(`Are you sure you want to ${user.isActive?'ban':'unban'} this user?`);
+            setModelAction("ban");
             setUserIdToBan(user._id);
            }}
-           className="font-medium text-red-500 hover:underline cursor-pointer"
+           className={`font-medium hover:underline cursor-pointer ${
+            user.isActive ? "text-red-500" : "text-green-500"
+           }`}
           >
-           Ban
+           {user.isActive ? "Ban" : "Unban"}
           </span>
          </Table.Cell>
          <Table.Cell>
           <span
            onClick={() => {
             setShowModel(true);
-                  setModelMessage("Are you sure you want to delete this user?");
-                  setModelAction('delete')
+            setModelMessage("Are you sure you want to delete this user?");
+            setModelAction("delete");
             setUserIdToDelete(user._id);
            }}
            className="font-medium text-red-500 hover:underline cursor-pointer"
@@ -179,7 +183,10 @@ const DashUsers = () => {
        {modelMessage}
       </h3>
       <div className="flex justify-between gap-4">
-       <Button color="failure" onClick={modelActoin ==='delete'? handelDeleteUser:handelBanUser}>
+       <Button
+        color="failure"
+        onClick={modelActoin === "delete" ? handelDeleteUser : handelBanUser}
+       >
         Yes, I'm sure
        </Button>
        <Button color="gray" onClick={() => setShowModel(false)}>
