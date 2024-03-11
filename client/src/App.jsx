@@ -13,6 +13,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import UpdatePost from "./pages/UpdataPost";
+import PostPage from "./pages/PostPage";
 
 // import "react-toastify/dist/ReactToastify.css";
 // import { ToastContainer, toast } from "react-toastify";
@@ -25,6 +26,7 @@ function App() {
     <Route path="/" element={<Home />} />
     <Route path="about" element={<About />} />
     <Route path="/projects" element={<Projects />} />
+    <Route path="/posts/:postSlug" element={<PostPage />} />
     <Route element={<PrivateRoute />}>
      <Route path="/dashboard" element={<Dashboard />} />
     </Route>
