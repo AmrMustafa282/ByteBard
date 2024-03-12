@@ -8,8 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Comment from "./Comment";
 
 const CommentSec = ({ postId }) => {
-  const { currentUser } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+ const { currentUser } = useSelector((state) => state.user);
+ const navigate = useNavigate();
  const [comment, setComment] = useState("");
  const [comments, setComments] = useState([]);
 
@@ -31,8 +31,8 @@ const CommentSec = ({ postId }) => {
   } catch (error) {
    toast.error(error.message);
   }
-  };
-  
+ };
+
  const fetchPostComments = async () => {
   try {
    const res = await axios.get(`/api/comment/getPostComments/${postId}`);
@@ -40,32 +40,47 @@ const CommentSec = ({ postId }) => {
   } catch (error) {
    console.log(error);
   }
-  };
-
-  const handleLike = async (commentId) => {
-   try {
-     if (!currentUser) {
-       toast.warning('You must login!');
-       setTimeout(() => {
-         navigate('/sign-in')
-       }, 5000)
-       return;
-     }
-     const res = await axios.put(`/api/comment/likeComment/${commentId}`)
-     if (res.status === 200) {
-       setComments(comments.map((comment) => 
-         comment._id === commentId ? {
-           ...comment,
-           likes: res.data.likes,
-           numberOfLikes: res.data.likes.length,
-         } : comment
-       ))
-      }
-     console.log(res.data)
-   } catch (error) {
-    console.log(error)
-   }
  };
+
+ const handleLike = async (commentId) => {
+  try {
+   if (!currentUser) {
+    toast.warning("You must login!");
+    setTimeout(() => {
+     navigate("/sign-in");
+    }, 5000);
+    return;
+   }
+   const res = await axios.put(`/api/comment/likeComment/${commentId}`);
+   if (res.status === 200) {
+    setComments(
+     comments.map((comment) =>
+      comment._id === commentId
+       ? {
+          ...comment,
+          likes: res.data.likes,
+          numberOfLikes: res.data.likes.length,
+         }
+       : comment
+     )
+    );
+   }
+   console.log(res.data);
+  } catch (error) {
+   console.log(error);
+  }
+ };
+
+  const handleEdit = async (comment, editedContent) => {
+    setComments(
+      comments.map((c) => 
+        c._id === comment.id.toString() ? {
+         ...c, content:editedContent
+       }: c
+     )
+   )
+ };
+
  useEffect(() => {
   fetchPostComments();
  }, [postId]);
@@ -129,7 +144,7 @@ const CommentSec = ({ postId }) => {
       </div>
      </div>
      {comments.map((c) => (
-      <Comment key={c._id} comment={c} onLike={handleLike} />
+       <Comment key={c._id} comment={c} onLike={handleLike} onEdit={handleEdit} />
      ))}
     </>
    )}
