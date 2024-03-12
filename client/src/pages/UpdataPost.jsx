@@ -114,15 +114,6 @@ const UpdatePost = () => {
  }, [postId]);
  return (
   <div className="p-3 max-w-3xl mx-auto  w-full">
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
    <h1 className="text-center text-3xl my-7 font-semibold">Update a post</h1>
    <form onSubmit={handelSubmit} className="flex flex-col gap-4">
     <div className="flex flex-col gap-4 sm:flex-row justify-between">

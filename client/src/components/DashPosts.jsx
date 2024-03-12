@@ -10,14 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 // import { CircularProgressbar } from "react-circular-progressbar";
 // import "react-circular-progressbar/dist/styles.css";
 
-
 const DashPosts = () => {
  const [userPosts, setUserPosts] = useState([]);
  const { currentUser } = useSelector((state) => state.user);
  const [showMore, setShowMore] = useState(true);
-  const [showModel, setShowModel] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState(null)
-
+ const [showModel, setShowModel] = useState(false);
+ const [postIdToDelete, setPostIdToDelete] = useState(null);
 
  const fetchPosts = async () => {
   try {
@@ -46,21 +44,22 @@ const DashPosts = () => {
    console.log(error);
   }
  };
-  const handelDeletePost = async () => {
-    setShowModel(false)
+ const handelDeletePost = async () => {
+  setShowModel(false);
   try {
-    const res = await axios.delete(`/api/post/delete/${postIdToDelete}/${currentUser._id}`)
-    if (res.status === 201)
-    {
-      toast.success('Post has been deleted')
-      setUserPosts((prev)=>prev.filter((post=> post._id !== postIdToDelete)));
-    } else {
-      return toast.error(res.data.message);
-      }
+   const res = await axios.delete(
+    `/api/post/delete/${postIdToDelete}/${currentUser._id}`
+   );
+   if (res.status === 201) {
+    toast.success("Post has been deleted");
+    setUserPosts((prev) => prev.filter((post) => post._id !== postIdToDelete));
+   } else {
+    return toast.error(res.data.message);
+   }
   } catch (error) {
-    toast.error(error.message);
+   toast.error(error.message);
   }
-}
+ };
  useEffect(() => {
   if (currentUser.isAdmin) fetchPosts();
  }, [currentUser._id]);
@@ -107,8 +106,8 @@ const DashPosts = () => {
          <Table.Cell>
           <span
            onClick={() => {
-                  setShowModel(true);
-                  setPostIdToDelete(post._id);
+            setShowModel(true);
+            setPostIdToDelete(post._id);
            }}
            className="font-medium text-red-500 hover:underline cursor-pointer"
           >
@@ -158,15 +157,6 @@ const DashPosts = () => {
      </div>
     </Modal.Body>
    </Modal>
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
   </div>
  );
 };

@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 
 const CreatePost = () => {
-  const navigate = useNavigate();
+ const navigate = useNavigate();
  const [file, setFile] = useState(null);
  const [imgUplaodProgress, setImgUplaodProgress] = useState(null);
  const [formData, setFormData] = useState({});
@@ -100,43 +100,35 @@ const CreatePost = () => {
   }
  };
 
-  const handelSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/post/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify(formData)
-      })
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error('Publish failed!')
-        return
-      }
-      toast.success('Post published successfully!');
-      setFormData({});
-      setTimeout(() => {
-        navigate(`/posts/${data.slug}`)
-      },2000)
-
-    } catch (error) {
-      toast.error('Something went wrong, make sure you chosed a unique title and filled the content.');
-    }
+ const handelSubmit = async (e) => {
+  e.preventDefault();
+  try {
+   const res = await fetch("/api/post/create", {
+    method: "POST",
+    headers: {
+     "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+   });
+   const data = await res.json();
+   if (!res.ok) {
+    toast.error("Publish failed!");
+    return;
+   }
+   toast.success("Post published successfully!");
+   setFormData({});
+   setTimeout(() => {
+    navigate(`/posts/${data.slug}`);
+   }, 2000);
+  } catch (error) {
+   toast.error(
+    "Something went wrong, make sure you chosed a unique title and filled the content."
+   );
   }
-  
+ };
+
  return (
   <div className="p-3 max-w-3xl mx-auto  w-full">
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
    <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
    <form onSubmit={handelSubmit} className="flex flex-col gap-4">
     <div className="flex flex-col gap-4 sm:flex-row justify-between">
@@ -194,7 +186,7 @@ const CreatePost = () => {
      className="h-72 mb-12 "
      required
      onChange={(value) => {
-      setFormData({ ...formData, content:value });
+      setFormData({ ...formData, content: value });
      }}
     />
     <Button type="submit" gradientDuoTone="purpleToPink">

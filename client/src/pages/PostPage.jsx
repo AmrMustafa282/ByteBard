@@ -10,6 +10,7 @@ import {
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useSelector } from "react-redux";
 import CallToAction from "../components/CallToAction";
+import CommentSec from "../components/CommentSec";
 
 const PostPage = () => {
  const { theme } = useSelector((state) => state.theme);
@@ -70,10 +71,11 @@ const PostPage = () => {
      <div
       className="p-3 max-w-2xl mx-auto w-full post-content"
       dangerouslySetInnerHTML={{ __html: post.content }}
-     ></div>  
-         <div className="max-w-4xl mx-auto w-full">
-           <CallToAction />
-      </div>
+     ></div>
+     <div className="max-w-4xl mx-auto w-full">
+      <CallToAction />
+         </div>
+         <CommentSec postId={post._id} />
     </main>
    )}
   </>

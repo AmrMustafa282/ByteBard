@@ -48,15 +48,6 @@ const SignUp = () => {
 
  return (
   <div className="min-h-[55vh] mt-20 relative">
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
    <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
     {/* left side */}
     <div className="flex-1">

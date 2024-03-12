@@ -76,7 +76,12 @@ const Header = () => {
       label={<Avatar alt="user" img={currentUser.profilePicture} rounded />}
      >
       <Dropdown.Header>
-       <span className="block text-sm">@{currentUser.name}</span>
+       <Link
+        to={"/dashboard?tab=profile"}
+        className="text-sm text-cyan-600 hover:underline"
+       >
+        @{currentUser.name}
+       </Link>
        <span className="block text-sm font-medium truncate">
         {currentUser.email}
        </span>

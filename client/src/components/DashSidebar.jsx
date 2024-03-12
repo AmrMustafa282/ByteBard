@@ -1,6 +1,11 @@
 import { Sidebar } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup } from "react-icons/hi";
+import {
+ HiUser,
+ HiArrowSmRight,
+ HiDocumentText,
+ HiOutlineUserGroup,
+} from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -35,15 +40,6 @@ const DashSidebar = () => {
  }, [location.search]);
  return (
   <>
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
    <Sidebar className="w-full md:w-56 border-r dark:border-r-gray-700 ">
     <Sidebar.Items>
      <Sidebar.ItemGroup className="flex flex-col">
@@ -67,7 +63,11 @@ const DashSidebar = () => {
       )}
       {currentUser.isAdmin && (
        <Link to="/dashboard?tab=users">
-        <Sidebar.Item active={tab === "users"} icon={HiOutlineUserGroup} as="div">
+        <Sidebar.Item
+         active={tab === "users"}
+         icon={HiOutlineUserGroup}
+         as="div"
+        >
          Users
         </Sidebar.Item>
        </Link>

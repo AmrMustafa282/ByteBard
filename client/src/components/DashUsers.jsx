@@ -47,9 +47,7 @@ const DashUsers = () => {
  const handelDeleteUser = async () => {
   setShowModel(false);
   try {
-   const res = await axios.delete(
-    `/api/user/delete/${userIdToDelete}`
-   );
+   const res = await axios.delete(`/api/user/delete/${userIdToDelete}`);
    if (res.status === 201) {
     toast.success("User has been deleted");
     setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
@@ -59,29 +57,25 @@ const DashUsers = () => {
   } catch (error) {
    toast.error(error.message);
   }
-  };
-  const handelBanUser = async () => {
-      setShowModel(false);
-      try {
-       const res = await axios.put(
-        `/api/user/ban/${userIdToBan}`
-       );
-       if (res.status === 201) {
-        toast.success(`User has been ${res.data.isActive?'unbanned': 'banned'}`);
-        setUsers((prevUsers) =>
-         prevUsers.map((user) =>
-          user._id === userIdToBan
-           ? { ...user, isActive: res.data.isActive }
-           : user
-         )
-        );
-       } else {
-        return toast.error(res.data.message);
-       }
-      } catch (error) {
-       toast.error(error.message);
-      }
+ };
+ const handelBanUser = async () => {
+  setShowModel(false);
+  try {
+   const res = await axios.put(`/api/user/ban/${userIdToBan}`);
+   if (res.status === 201) {
+    toast.success(`User has been ${res.data.isActive ? "unbanned" : "banned"}`);
+    setUsers((prevUsers) =>
+     prevUsers.map((user) =>
+      user._id === userIdToBan ? { ...user, isActive: res.data.isActive } : user
+     )
+    );
+   } else {
+    return toast.error(res.data.message);
+   }
+  } catch (error) {
+   toast.error(error.message);
   }
+ };
  useEffect(() => {
   if (currentUser.isAdmin) fetchUsers();
  }, [currentUser._id]);
@@ -134,7 +128,11 @@ const DashUsers = () => {
           <span
            onClick={() => {
             setShowModel(true);
-            setModelMessage(`Are you sure you want to ${user.isActive?'ban':'unban'} this user?`);
+            setModelMessage(
+             `Are you sure you want to ${
+              user.isActive ? "ban" : "unban"
+             } this user?`
+            );
             setModelAction("ban");
             setUserIdToBan(user._id);
            }}
@@ -196,16 +194,6 @@ const DashUsers = () => {
      </div>
     </Modal.Body>
    </Modal>
-
-   <ToastContainer
-    theme={useSelector((state) => state.theme).theme}
-    closeOnClick
-    pauseOnHover
-    pauseOnFocusLoss
-    draggable
-    autoClose={3000}
-    limit={3}
-   />
   </div>
  );
 };
