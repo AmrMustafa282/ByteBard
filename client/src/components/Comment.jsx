@@ -4,8 +4,9 @@ import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Button, Textarea } from "flowbite-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit, onDelete }) => {
  const { currentUser } = useSelector((state) => state.user);
  const user = comment.user;
 
@@ -18,14 +19,16 @@ const Comment = ({ comment, onLike, onEdit }) => {
  };
 
  const handleSave = async () => {
+  if (editedContent === comment.content)
+   return toast.info("No changes have been done");
   try {
    const res = await axios.put(`/api/comment/editComment/${comment._id}`, {
     content: editedContent,
    });
-    if (res.status === 200) {
-      setIsEditing(false);
-      onEdit(comment, editedContent)
-    }
+   if (res.status === 200) {
+    setIsEditing(false);
+    onEdit(comment, editedContent);
+   }
   } catch (error) {
    console.log(error);
   }
@@ -101,13 +104,22 @@ const Comment = ({ comment, onLike, onEdit }) => {
        </p>
        {currentUser &&
         (currentUser._id === comment.userId || currentUser.isAdmin) && (
-         <button
-          type="button"
-          className="text-gray-400 hover:text-blue-500"
-          onClick={handleEdit}
-         >
-          Edit
-         </button>
+         <>
+          <button
+           type="button"
+           className="text-gray-400 hover:text-blue-500"
+           onClick={handleEdit}
+          >
+           Edit
+          </button>
+          <button
+           type="button"
+           className="text-gray-400 hover:text-red-500"
+           onClick={() => onDelete(comment._id.toString())}
+          >
+           Delete
+          </button>
+         </>
         )}
       </div>
      </>
