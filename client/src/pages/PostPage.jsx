@@ -8,15 +8,15 @@ import {
  docco,
  atomOneDark,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { useSelector } from "react-redux";
 import CallToAction from "../components/CallToAction";
 import CommentSec from "../components/CommentSec";
+import PostCard from "../components/PostCard";
 
 const PostPage = () => {
- const { theme } = useSelector((state) => state.theme);
  const { postSlug } = useParams();
  const [loading, setLoading] = useState(true);
  const [post, setPost] = useState(null);
+ const [recentPosts, setRecentPosts] = useState(null);
 
  const fetchPost = async () => {
   try {
@@ -32,10 +32,21 @@ const PostPage = () => {
    toast.error(error.message);
   }
  };
+ const fetchRecentPosts = async () => {
+  try {
+   const res = await axios.get(`/api/post/getposts?limit=3`);
+   if (res.status === 200) {
+    setRecentPosts(res.data.posts);
+   }
+  } catch (error) {}
+ };
  useEffect(() => {
   fetchPost();
  }, [postSlug]);
 
+ useEffect(() => {
+  fetchRecentPosts();
+ }, []);
  return (
   <>
    {loading && (
@@ -44,7 +55,7 @@ const PostPage = () => {
     </div>
    )}
    {post && (
-    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-[70vh]">
+    <main className="p-3 flex flex-col  mx-auto min-h-[70vh] max-w-6xl">
      <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
       {post.title}
      </h1>
@@ -69,13 +80,20 @@ const PostPage = () => {
      </div>
 
      <div
-      className="p-3 max-w-2xl mx-auto w-full post-content"
+      className="p-3 max-w-sm md:max-w-full text-xs mx-auto w-full post-content "
       dangerouslySetInnerHTML={{ __html: post.content }}
      ></div>
-     <div className="max-w-4xl mx-auto w-full">
+     <div className=" mx-auto w-full">
       <CallToAction />
-         </div>
-             <CommentSec postId={post._id}  />
+     </div>
+     <CommentSec postId={post._id} />
+     <div className="flex flex-col justify-center items-center mb-5 ">
+      <h1 className="text-xl mt-5">Recent articles</h1>
+      <div className="flex flex-wrap gap-5 mt-5 justify-start">
+       {recentPosts &&
+        recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+      </div>
+     </div>
     </main>
    )}
   </>

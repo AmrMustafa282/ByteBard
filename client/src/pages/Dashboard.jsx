@@ -15,7 +15,8 @@ const Dashboard = () => {
   },[location.search])
 
   return (
-   <div className="6xl:container 6xl:mx-auto flex flex-grow flex-col md:flex-row">
+   <div className=" flex flex-grow flex-col md:flex-row">
+    {/* 6xl:container 6xl:mx-auto */}
     <div className="md:w-56">
      {/* Sidebar */}
      <DashSidebar />
