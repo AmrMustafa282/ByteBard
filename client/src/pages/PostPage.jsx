@@ -75,7 +75,7 @@ const PostPage = () => {
      <div className="max-w-4xl mx-auto w-full">
       <CallToAction />
          </div>
-         <CommentSec postId={post._id} />
+             <CommentSec postId={post._id}  />
     </main>
    )}
   </>

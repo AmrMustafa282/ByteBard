@@ -1,14 +1,17 @@
-import { Button, TextInput, Textarea } from "flowbite-react";
-import React, { useState } from "react";
+import { Button, Textarea } from "flowbite-react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Comment from "./Comment";
 
 const CommentSec = ({ postId }) => {
- const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
  const [comment, setComment] = useState("");
+ const [comments, setComments] = useState([]);
 
  const handleSubmit = async (e) => {
   e.preventDefault();
@@ -21,13 +24,51 @@ const CommentSec = ({ postId }) => {
    });
    if (res.status === 200) {
     setComment("");
+    setComments([res.data, ...comments]);
+    //  console.log(res.data)
     toast.success("Commentd added successfully");
    }
   } catch (error) {
-    toast.error(error.message)
+   toast.error(error.message);
   }
- };
+  };
+  
+ const fetchPostComments = async () => {
+  try {
+   const res = await axios.get(`/api/comment/getPostComments/${postId}`);
+   if (res.status === 200) setComments(res.data);
+  } catch (error) {
+   console.log(error);
+  }
+  };
 
+  const handleLike = async (commentId) => {
+   try {
+     if (!currentUser) {
+       toast.warning('You must login!');
+       setTimeout(() => {
+         navigate('/sign-in')
+       }, 5000)
+       return;
+     }
+     const res = await axios.put(`/api/comment/likeComment/${commentId}`)
+     if (res.status === 200) {
+       setComments(comments.map((comment) => 
+         comment._id === commentId ? {
+           ...comment,
+           likes: res.data.likes,
+           numberOfLikes: res.data.likes.length,
+         } : comment
+       ))
+      }
+     console.log(res.data)
+   } catch (error) {
+    console.log(error)
+   }
+ };
+ useEffect(() => {
+  fetchPostComments();
+ }, [postId]);
  return (
   <div className="max-w-2xl mx-auto w-full p-3">
    {currentUser ? (
@@ -76,6 +117,21 @@ const CommentSec = ({ postId }) => {
       </Button>
      </div>
     </form>
+   )}
+   {comments.length === 0 ? (
+    <p className="text-sm my-5">No comments yet!</p>
+   ) : (
+    <>
+     <div className="text-sm my-5 flex items-center gap-1">
+      <p>Comments</p>
+      <div className="border border-gray-400 py-1 px-2 rounded-sm">
+       <p>{comments.length}</p>
+      </div>
+     </div>
+     {comments.map((c) => (
+      <Comment key={c._id} comment={c} onLike={handleLike} />
+     ))}
+    </>
    )}
   </div>
  );

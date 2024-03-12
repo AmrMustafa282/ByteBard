@@ -29,7 +29,7 @@ const postSchema = new mongoose.Schema(
    type: String,
    required: [true, "Slug is required!"],
    unique: true,
-  },
+  }
  },
  {
   timestamps: true,
@@ -41,8 +41,23 @@ postSchema.set("toObject", { virtuals: true });
 postSchema.virtual("user", {
  ref: "User",
  localField: "userId",
- foreignField: "_id"
+ foreignField: "_id",
 });
+
+// Virtual Populating [chile Ref]
+postSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'post',
+  localField: '_id',
+});
+
+// postSchema.pre(/^find/, function (next) {
+//  this.populate({
+//   path: "comments",
+//  });
+
+//  next();
+// });
 
 const Post = mongoose.model("Post", postSchema);
 

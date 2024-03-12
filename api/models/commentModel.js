@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose  from "mongoose";
 
 const commentSchema = new mongoose.Schema(
  {
@@ -6,10 +6,12 @@ const commentSchema = new mongoose.Schema(
    type: String,
    required: true,
   },
-  postId: {
-   type: mongoose.Schema.Types.ObjectId,
+  post: {
+   type: mongoose.Schema.ObjectId,
    ref: "Post",
-   required: true,
+  },
+  postId: {
+   type: String
   },
   userId: {
    type: mongoose.Schema.Types.ObjectId,
@@ -33,34 +35,32 @@ const commentSchema = new mongoose.Schema(
 commentSchema.set("toJSON", { virtuals: true });
 commentSchema.set("toObject", { virtuals: true });
 
-// commentSchema.pre("save", async function (next) {
-//  try {
-//   await this.populate([
-//    {
-//     path: "user",
-//     select: "-password",
-//     model: "User",
-//    },
-//    { path: "post", model: "Post" },
-//   ]);
+commentSchema.pre("save", async function (next) {
+ try {
+  await this.populate(
+   {
+    path: "user",
+    select: "-password",
+    model: "User",
+   },
+  //  { path: "post", model: "Post" },
+  );
 
-//   next();
-//  } catch (error) {
-//   next(error);
-//  }
-// });
+  next();
+ } catch (error) {
+  next(error);
+ }
+});
+
 
 commentSchema.virtual("user", {
  ref: "User",
  localField: "userId",
- foreignField: "_id",
+  foreignField: "_id",
+ justOne:true
 });
 
-commentSchema.virtual("post", {
- ref: "Post",
- localField: "postId",
- foreignField: "_id",
-});
+
 
 const Comment = mongoose.model("Comment", commentSchema);
 

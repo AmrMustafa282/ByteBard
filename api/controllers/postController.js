@@ -35,7 +35,7 @@ export const getPosts = async (req, res, next) => {
   const limit = parseInt(req.query.limit) || 9;
   const sortDirection = req.query.order === "asc" ? 1 : -1;
 
-  // const posts = await Post.find().populate("user","_id name email profilePicture createdAt");
+
   const posts = await Post.find({
    ...(req.query.userId && { userId: req.query.userId }),
    ...(req.query.category && { category: req.query.category }),
@@ -50,7 +50,8 @@ export const getPosts = async (req, res, next) => {
   })
    .sort({ updatedAt: sortDirection })
    .skip(startIndex)
-   .limit(limit);
+   .limit(limit)
+   
 
   const totalPosts = await Post.countDocuments();
   const now = new Date();
@@ -68,6 +69,22 @@ export const getPosts = async (req, res, next) => {
    posts,
    totalPosts,
    lastMonthPosts,
+  });
+ } catch (error) {
+  next(error);
+ }
+};
+export const getPost = async (req, res, next) => {
+ try {
+
+  const post = await Post.findOne({
+   ...(req.query.userId && { userId: req.query.userId }),
+   ...(req.query.category && { category: req.query.category }),
+   ...(req.query.slug && { slug: req.query.slug }),
+   ...(req.query.postId && { _id: req.query.postId }),  
+  })
+  res.status(200).json({
+   post,
   });
  } catch (error) {
   next(error);
