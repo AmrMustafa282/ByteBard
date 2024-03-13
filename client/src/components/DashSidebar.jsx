@@ -5,6 +5,8 @@ import {
  HiArrowSmRight,
  HiDocumentText,
  HiOutlineUserGroup,
+ HiAnnotation,
+ HiChartPie,
 } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,9 +42,16 @@ const DashSidebar = () => {
  }, [location.search]);
  return (
   <>
-   <Sidebar className="w-full md:w-56 border-r dark:border-r-gray-700 ">
-    <Sidebar.Items>
+   <Sidebar className="w-14 xl:w-56 border-r dark:border-r-gray-700 ">
+    <Sidebar.Items className="hidden  xl:flex">
      <Sidebar.ItemGroup className="flex flex-col">
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=dashboard">
+        <Sidebar.Item active={tab === "dashboard"} icon={HiChartPie} as="div">
+         Dashboard
+        </Sidebar.Item>
+       </Link>
+      )}
       <Link to="/dashboard?tab=profile">
        <Sidebar.Item
         active={tab === "profile"}
@@ -72,6 +81,13 @@ const DashSidebar = () => {
         </Sidebar.Item>
        </Link>
       )}
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=comments">
+        <Sidebar.Item active={tab === "comments"} icon={HiAnnotation} as="div">
+         Comments
+        </Sidebar.Item>
+       </Link>
+      )}
       <Sidebar.Item
        onClick={handelSignout}
        icon={HiArrowSmRight}
@@ -79,6 +95,47 @@ const DashSidebar = () => {
        className="cursor-pointer"
       >
        Sign Out
+      </Sidebar.Item>
+     </Sidebar.ItemGroup>
+    </Sidebar.Items>
+
+    <Sidebar.Items className="block xl:hidden ">
+     <Sidebar.ItemGroup className="flex flex-col">
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=dashboard">
+        <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+         <HiChartPie className="w-8 h-10" />
+        </Sidebar.Item>
+       </Link>
+      )}
+      <Link to="/dashboard?tab=profile">
+       <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+        <HiUser className="w-8 h-10 " />
+       </Sidebar.Item>
+      </Link>
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=posts">
+        <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+         <HiDocumentText className="w-8 h-10" />
+        </Sidebar.Item>
+       </Link>
+      )}
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=users">
+        <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+         <HiOutlineUserGroup className="w-8 h-10" />
+        </Sidebar.Item>
+       </Link>
+      )}
+      {currentUser.isAdmin && (
+       <Link to="/dashboard?tab=comments">
+        <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+         <HiAnnotation className="w-8 h-10" />
+        </Sidebar.Item>
+       </Link>
+      )}
+      <Sidebar.Item className="-ml-2 w-12 h-10 mb-1">
+       <HiArrowSmRight className="w-8 h-10" />
       </Sidebar.Item>
      </Sidebar.ItemGroup>
     </Sidebar.Items>

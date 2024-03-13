@@ -8,9 +8,11 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { MdDelete, MdDeleteOutline } from "react-icons/md";
 
 const DashComments = () => {
  const { currentUser } = useSelector((state) => state.user);
+ const { theme } = useSelector((state) => state.theme);
  const [comments, setComments] = useState([]);
  const [showMore, setShowMore] = useState(true);
  const [showModel, setShowModel] = useState(false);
@@ -143,7 +145,11 @@ const DashComments = () => {
            }}
            className="font-medium text-red-500 hover:underline cursor-pointer"
           >
-           Delete
+           {theme === "dark" ? (
+            <MdDelete className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           ) : (
+            <MdDeleteOutline className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           )}
           </span>
          </Table.Cell>
         </Table.Row>

@@ -1,16 +1,19 @@
 import axios from "axios";
-import { Modal, Table, Button } from "flowbite-react";
+import { Modal, Table, Button, theme } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { MdDelete, MdDeleteOutline } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaEdit } from "react-icons/fa";
 // import { CircularProgressbar } from "react-circular-progressbar";
 // import "react-circular-progressbar/dist/styles.css";
 
 const DashPosts = () => {
+ const { theme } = useSelector((state) => state.theme);
  const [userPosts, setUserPosts] = useState([]);
  const { currentUser } = useSelector((state) => state.user);
  const [showMore, setShowMore] = useState(true);
@@ -111,7 +114,11 @@ const DashPosts = () => {
            }}
            className="font-medium text-red-500 hover:underline cursor-pointer"
           >
-           Delete
+           {theme === "dark" ? (
+            <MdDelete className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           ) : (
+            <MdDeleteOutline className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           )}
           </span>
          </Table.Cell>
          <Table.Cell>
@@ -119,7 +126,7 @@ const DashPosts = () => {
            to={`/update-post/${post._id}`}
            className="text-blue-700  hover:underline"
           >
-           <span>Edit</span>
+            <FaEdit className="mx-auto h-6 w-5 hover:scale-125 transition-all " />
           </Link>
          </Table.Cell>
         </Table.Row>

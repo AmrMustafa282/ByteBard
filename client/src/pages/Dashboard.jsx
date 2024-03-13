@@ -5,6 +5,7 @@ import DashProfile from './../components/DashProfile'
 import DashPosts from "../components/DashPosts"
 import DashUsers from "../components/DashUsers"
 import DashComments from "../components/DashComments"
+import DashboardComponent from "../components/DashboardComponent"
 
 const Dashboard = () => {
   const location = useLocation()
@@ -16,16 +17,18 @@ const Dashboard = () => {
   },[location.search])
 
   return (
-   <div className=" flex flex-grow flex-col md:flex-row">
+   <div className=" flex flex-grow flex-row">
     {/* 6xl:container 6xl:mx-auto */}
-    <div className="md:w-56">
-     {/* Sidebar */}
+      <div
+        className="xl:w-56 "
+      >
      <DashSidebar />
     </div>
     {tab === "profile" && <DashProfile />}
     {tab === "posts" && <DashPosts />}
     {tab === "users" && <DashUsers />}
     {tab === "comments" && <DashComments />}
+    {tab === "dashboard" && <DashboardComponent />}
    </div>
   );
 }

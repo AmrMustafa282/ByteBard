@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { IoIosArrowDown } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaBan, FaCheck, FaTimes } from "react-icons/fa";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdDelete, MdDeleteOutline } from "react-icons/md";
 
 const DashUsers = () => {
+ const {theme} = useSelector((state) => state.theme);
  const { currentUser } = useSelector((state) => state.user);
  const [users, setUsers] = useState([]);
  const [showMore, setShowMore] = useState(true);
@@ -92,7 +94,7 @@ const DashUsers = () => {
        <Table.HeadCell>email</Table.HeadCell>
        <Table.HeadCell>Admin</Table.HeadCell>
        <Table.HeadCell>Active</Table.HeadCell>
-       <Table.HeadCell>Ban</Table.HeadCell>
+       <Table.HeadCell>Baning</Table.HeadCell>
        <Table.HeadCell>Delete</Table.HeadCell>
       </Table.Head>
       {users.map((user) => (
@@ -105,7 +107,7 @@ const DashUsers = () => {
           <img
            src={user.profilePicture}
            alt={user.name}
-           className="rounded-full w-10 h-10 mx-auto object-contain  bg-gray-200"
+           className="rounded-full w-8 h-8 mx-auto object-contain  bg-gray-200"
           />
          </Table.Cell>
          <Table.Cell>{user.name}</Table.Cell>
@@ -140,7 +142,7 @@ const DashUsers = () => {
             user.isActive ? "text-red-500" : "text-green-500"
            }`}
           >
-           {user.isActive ? "Ban" : "Unban"}
+           {user.isActive ? <FaBan className="fill-red-500 mx-auto"/> : <FaBan className="fill-blue-500 mx-auto"/>}
           </span>
          </Table.Cell>
          <Table.Cell>
@@ -153,7 +155,11 @@ const DashUsers = () => {
            }}
            className="font-medium text-red-500 hover:underline cursor-pointer"
           >
-           Delete
+           {theme === "dark" ? (
+            <MdDelete className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           ) : (
+            <MdDeleteOutline className="mx-auto h-6 w-6 hover:scale-125 transition-all " />
+           )}
           </span>
          </Table.Cell>
         </Table.Row>
