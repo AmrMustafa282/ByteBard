@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,10 +12,14 @@ import { signoutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
  const path = useLocation().pathname;
+ const location = useLocation();
  const dispatch = useDispatch();
  const navigate = useNavigate();
  const { theme } = useSelector((state) => state.theme);
  const { currentUser } = useSelector((state) => state.user);
+ const [searchTerm, setSearchTerm] = useState("");
+
+  
  const handelSignout = async () => {
   try {
    const res = await fetch("/api/user/signout", {
@@ -31,7 +35,20 @@ const Header = () => {
   } catch (error) {
    toast.error(error.message);
   }
- };
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search)
+    urlParams.set('searchTerm', searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`)
+  }
+  useEffect(() => {
+    const urlPrams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlPrams.get('searchTerm')
+    if(searchTermFromUrl)setSearchTerm(searchTermFromUrl);
+ }, [location.search]);
  return (
   <Navbar className="border-b-2 ">
    <Link
@@ -50,12 +67,14 @@ const Header = () => {
      draggable={true}
      transition="Bounce"
     />
-    <form>
+    <form onSubmit={handleSubmit}>
      <TextInput
       type="text"
       placeholder="Search..."
       rightIcon={AiOutlineSearch}
-      className="hidden lg:inline"
+           className="hidden lg:inline"
+           value={searchTerm}
+           onChange={(e)=>setSearchTerm(e.target.value)}
      />
     </form>
     <Button className="w-12 h-10 lg:hidden" color="gray">
