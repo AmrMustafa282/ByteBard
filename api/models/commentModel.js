@@ -6,10 +6,11 @@ const commentSchema = new mongoose.Schema(
    type: String,
    required: true,
   },
-  post: {
-   type: mongoose.Schema.ObjectId,
-   ref: "Post",
-  },
+  // post: {
+  //  type: mongoose.Schema.ObjectId,
+  // //  type: mongoose.Schema.Types.ObjectId,
+  //  ref: "Post",
+  // },
   postId: {
    type: String
   },
@@ -56,6 +57,12 @@ commentSchema.pre("save", async function (next) {
 commentSchema.virtual("user", {
  ref: "User",
  localField: "userId",
+  foreignField: "_id",
+ justOne:true
+});
+commentSchema.virtual("post", {
+ ref: "Post",
+ localField: "postId",
   foreignField: "_id",
  justOne:true
 });
